@@ -7,7 +7,7 @@ dregs:
   # 版权年份
   copyrightYear: 2021
   # 实例演示开关
-  demoEnabled: true
+  demoEnabled: false
   # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
   profile: D:/Dregs/uploadPath
   # 获取ip地址开关
@@ -31,7 +31,7 @@ server:
 # 日志配置
 logging:
   level:
-    com.ruoyi: debug
+    com.dregs: debug
     org.springframework: warn
 
 # 用户配置
@@ -139,9 +139,9 @@ swagger:
 # 代码生成
 gen: 
   # 作者
-  author: ruoyi
+  author: dregs
   # 默认生成包路径 system 需改成自己的模块名称 如 system monitor tool
-  packageName: com.ruoyi.project.system
+  packageName: com.dregs.project.system
   # 自动去除表前缀，默认是true
   autoRemovePre: true
   # 表前缀（生成类名不会包含表前缀，多个用逗号分隔）

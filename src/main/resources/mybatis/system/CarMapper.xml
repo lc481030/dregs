@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dregs.project.system.car.mapper.CarMapper">
+    
+    <resultMap type="Car" id="CarResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="number"    column="number"    />
+        <result property="carNum"    column="car_num"    />
+        <result property="driver"    column="driver"    />
+        <result property="cardNum"    column="card_num"    />
+        <result property="tel"    column="tel"    />
+        <result property="alluser"    column="alluser"    />
+        <result property="carType"    column="car_type"    />
+        <result property="auditDate"    column="audit_date"    />
+        <result property="deleted"    column="deleted"    />
+    </resultMap>
+
+    <sql id="selectCarVo">
+        select id, create_time, update_time, number, car_num, driver, card_num, tel, alluser, car_type, audit_date, deleted from t_car
+    </sql>
+
+    <select id="selectCarList" parameterType="Car" resultMap="CarResult">
+        <include refid="selectCarVo"/>
+        <where>
+            1 = 1 and deleted !=1
+            <if test="number != null  and number != ''"> and number = #{number}</if>
+            <if test="carNum != null  and carNum != ''"> and car_num like concat('%', #{carNum}, '%')</if>
+            <if test="driver != null  and driver != ''"> and driver like concat('%', #{driver}, '%')</if>
+            <if test="cardNum != null  and cardNum != ''"> and card_num = #{cardNum}</if>
+            <if test="tel != null  and tel != ''"> and tel = #{tel}</if>
+            <if test="alluser != null  and alluser != ''"> and alluser = #{alluser}</if>
+            <if test="carType != null  and carType != ''"> and car_type = #{carType}</if>
+            <if test="auditDate != null "> and audit_date = #{auditDate}</if>
+            <if test="deleted != null  and deleted != ''"> and deleted = #{deleted}</if>
+
+            <if test="params.beginAuditDate != null and params.beginAuditDate != ''"><!-- 开始时间检索 -->
+                and date_format(audit_date,'%y%m%d') &gt;= date_format(#{params.beginAuditDate},'%y%m%d')
+            </if>
+            <if test="params.endAuditDate != null and params.endAuditDate != ''"><!-- 结束时间检索 -->
+                and date_format(audit_date,'%y%m%d') &lt;= date_format(#{params.endAuditDate},'%y%m%d')
+            </if>
+
+        </where>
+    </select>
+    
+    <select id="selectCarById" parameterType="Long" resultMap="CarResult">
+        <include refid="selectCarVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCar" parameterType="Car" useGeneratedKeys="true" keyProperty="id">
+        insert into t_car
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="number != null">number,</if>
+            <if test="carNum != null">car_num,</if>
+            <if test="driver != null">driver,</if>
+            <if test="cardNum != null">card_num,</if>
+            <if test="tel != null">tel,</if>
+            <if test="alluser != null">alluser,</if>
+            <if test="carType != null">car_type,</if>
+            <if test="auditDate != null">audit_date,</if>
+            <if test="deleted != null">deleted,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="number != null">#{number},</if>
+            <if test="carNum != null">#{carNum},</if>
+            <if test="driver != null">#{driver},</if>
+            <if test="cardNum != null">#{cardNum},</if>
+            <if test="tel != null">#{tel},</if>
+            <if test="alluser != null">#{alluser},</if>
+            <if test="carType != null">#{carType},</if>
+            <if test="auditDate != null">#{auditDate},</if>
+            <if test="deleted != null">#{deleted},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCar" parameterType="Car">
+        update t_car
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="number != null">number = #{number},</if>
+            <if test="carNum != null">car_num = #{carNum},</if>
+            <if test="driver != null">driver = #{driver},</if>
+            <if test="cardNum != null">card_num = #{cardNum},</if>
+            <if test="tel != null">tel = #{tel},</if>
+            <if test="alluser != null">alluser = #{alluser},</if>
+            <if test="carType != null">car_type = #{carType},</if>
+            <if test="auditDate != null">audit_date = #{auditDate},</if>
+            <if test="deleted != null">deleted = #{deleted},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCarById" parameterType="Long">
+        update t_car set deleted = 1 where id = #{id}
+--         delete from t_car where id = #{id}
+    </delete>
+
+    <delete id="deleteCarByIds" parameterType="String">
+--         delete from t_car where id in
+        update t_car set deleted = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

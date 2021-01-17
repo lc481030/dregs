@@ -3529,7 +3529,7 @@ S2.define('select2/data/ajax',[
           q: params.term
         });
       },
-      transport: function (params, success, failure) {
+      dregs: function (params, success, failure) {
         var $request = $.ajax(params);
 
         $request.then(success);
@@ -3572,7 +3572,7 @@ S2.define('select2/data/ajax',[
     }
 
     function request () {
-      var $request = options.transport(options, function (data) {
+      var $request = options.dregs(options, function (data) {
         var results = self.processResults(data, params);
 
         if (self.options.get('debug') && window.console && console.error) {
@@ -3588,7 +3588,7 @@ S2.define('select2/data/ajax',[
         callback(results);
       }, function () {
         // Attempt to detect if a request was aborted
-        // Only works if the transport exposes a status property
+        // Only works if the dregs exposes a status property
         if ('status' in $request &&
             ($request.status === 0 || $request.status === '0')) {
           return;
