@@ -13,7 +13,7 @@
                 <div class="col-sm-8">
                     <select name="projectSelect" id="projectSelect" class="form-control" width="50">
                         <option value="">选择项目</option>
-                        <option th:each="s : ${projectList}" th:id="${s.id}"  th:name="${s.name}" th:text="${s.name}" th:value="${s.id}"></option>
+                        <option th:each="s : ${projectList}" th:sid="${s.id}"  th:name="${s.name}" th:text="${s.name}" th:value="${s.id}"></option>
                     </select>
                     <input name="projectId" value=""  class="form-control" type="hidden">
                 </div>
@@ -47,7 +47,7 @@
                 <div class="col-sm-8">
                     <select name="slagyardSelect" id="slagyardSelect" class="form-control" width="50">
                         <option value="">选择渣场</option>
-                        <option th:each="s : ${slagyardList}" th:id="${s.id}" th:text="${s.title}" th:value="${s.id}"></option>
+                        <option th:each="s : ${slagyardList}" th:sid="${s.id}" th:text="${s.title}" th:value="${s.id}"></option>
                     </select>
                     <input name="slagyardId" value=""  class="form-control" type="hidden">
                 </div>
@@ -69,11 +69,11 @@
             }
         }
         $("select[name='slagyardSelect']").on("change",function () {
-            $("input[name='slagyardId']").val($("select[name='slagyardSelect']").find("option[value='"+this.value+"']").attr("id"));
+            $("input[name='slagyardId']").val($("select[name='slagyardSelect']").find("option[value='"+this.value+"']").attr("sid"));
         });
 
         $("select[name='projectSelect']").on("change",function () {
-            $("input[name='projectId']").val($("select[name='projectSelect']").find("option[value='"+this.value+"']").attr("id"));
+            $("input[name='projectId']").val($("select[name='projectSelect']").find("option[value='"+this.value+"']").attr("sid"));
         });
     </script>
 </body>
