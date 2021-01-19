@@ -15,7 +15,7 @@
             <div class="form-group">    
                 <label class="col-sm-3 control-label">父项目：</label>
                 <div class="col-sm-8">
-                    <select name="pid" class="form-control" required width="50" >
+                    <select name="pid" class="form-control" width="50" >
                         <option value="">--无父项目--</option>
                         <option th:each="project : ${projects}" th:text="${project.name}" th:value="${project.id}"></option>
                     </select>

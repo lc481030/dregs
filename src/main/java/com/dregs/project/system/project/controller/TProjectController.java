@@ -98,6 +98,9 @@ public class TProjectController extends BaseController
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Long id, ModelMap mmap)
     {
+        TProject project = new TProject();
+        List<TProject> projects = tProjectService.selectTProjectList(project);
+        mmap.put("projects",projects);
         TProject tProject = tProjectService.selectTProjectById(id);
         mmap.put("tProject", tProject);
         return prefix + "/edit";

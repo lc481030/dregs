@@ -16,8 +16,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, create_time, update_time, name, pid from t_project
     </sql>
 
-    <select id="selectTProjectList" parameterType="TProject" resultMap="TProjectResult">
-        select t1.id, t1.create_time, t1.update_time, t1.name,IFNULL(t2.name,'无') as pName  from t_project as t1
+    <select id="selectTProjectList" parameterType="TProject" resultType="TProject">
+        select t1.id, t1.create_time, t1.update_time, t1.name,IFNULL(t2.name,'无') as paName  from t_project as t1
         LEFT JOIN t_project as t2 on t1.pid = t2.id
         <where>
             <if test="name != null  and name != ''"> and t1.name like concat('%', #{name}, '%')</if>

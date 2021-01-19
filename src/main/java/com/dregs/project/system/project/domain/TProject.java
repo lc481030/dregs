@@ -3,8 +3,6 @@ package com.dregs.project.system.project.domain;
 import com.dregs.framework.aspectj.lang.annotation.Excel;
 import com.dregs.framework.web.domain.BaseEntity;
 import lombok.Data;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
  * 项目管理对象 t_project
@@ -29,6 +27,6 @@ public class TProject extends BaseEntity
 
     /** 项目名称 */
     @Excel(name = "父项目名称")
-    private String pName;
+    private String paName;
 
 }
