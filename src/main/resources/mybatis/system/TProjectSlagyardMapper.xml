@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dregs.project.system.slagyard.mapper.TProjectSlagyardMapper">
+    
+    <resultMap type="TProjectSlagyard" id="TProjectSlagyardResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="projectType"    column="project_type"    />
+        <result property="pullMoney"    column="pull_money"    />
+        <result property="pushCarMaoney"    column="push_car_maoney"    />
+        <result property="pushSlagyardMaoney"    column="push_slagyard_maoney"    />
+        <result property="slagyardId"    column="slagyard_id"    />
+        <result property="deleted"    column="deleted"    />
+    </resultMap>
+
+    <sql id="selectTProjectSlagyardVo">
+        select id, create_time, update_time, project_id, project_type, pull_money, push_car_maoney, push_slagyard_maoney, slagyard_id, deleted from t_project_slagyard
+    </sql>
+
+    <select id="selectTProjectSlagyardList" parameterType="TProjectSlagyard" resultMap="TProjectSlagyardResult">
+        <include refid="selectTProjectSlagyardVo"/>
+        <where>  
+            <if test="projectId != null  and projectId != ''"> and project_id = #{projectId}</if>
+            <if test="projectType != null  and projectType != ''"> and project_type = #{projectType}</if>
+            <if test="pullMoney != null  and pullMoney != ''"> and pull_money = #{pullMoney}</if>
+            <if test="pushCarMaoney != null  and pushCarMaoney != ''"> and push_car_maoney = #{pushCarMaoney}</if>
+            <if test="pushSlagyardMaoney != null  and pushSlagyardMaoney != ''"> and push_slagyard_maoney = #{pushSlagyardMaoney}</if>
+            <if test="slagyardId != null "> and slagyard_id = #{slagyardId}</if>
+            <if test="deleted != null "> and deleted = #{deleted}</if>
+        </where>
+    </select>
+    
+    <select id="selectTProjectSlagyardById" parameterType="Long" resultMap="TProjectSlagyardResult">
+        <include refid="selectTProjectSlagyardVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTProjectSlagyard" parameterType="TProjectSlagyard">
+        insert into t_project_slagyard
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="projectId != null">project_id,</if>
+            <if test="projectType != null">project_type,</if>
+            <if test="pullMoney != null">pull_money,</if>
+            <if test="pushCarMaoney != null">push_car_maoney,</if>
+            <if test="pushSlagyardMaoney != null">push_slagyard_maoney,</if>
+            <if test="slagyardId != null">slagyard_id,</if>
+            <if test="deleted != null">deleted,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="projectId != null">#{projectId},</if>
+            <if test="projectType != null">#{projectType},</if>
+            <if test="pullMoney != null">#{pullMoney},</if>
+            <if test="pushCarMaoney != null">#{pushCarMaoney},</if>
+            <if test="pushSlagyardMaoney != null">#{pushSlagyardMaoney},</if>
+            <if test="slagyardId != null">#{slagyardId},</if>
+            <if test="deleted != null">#{deleted},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTProjectSlagyard" parameterType="TProjectSlagyard">
+        update t_project_slagyard
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="projectType != null">project_type = #{projectType},</if>
+            <if test="pullMoney != null">pull_money = #{pullMoney},</if>
+            <if test="pushCarMaoney != null">push_car_maoney = #{pushCarMaoney},</if>
+            <if test="pushSlagyardMaoney != null">push_slagyard_maoney = #{pushSlagyardMaoney},</if>
+            <if test="slagyardId != null">slagyard_id = #{slagyardId},</if>
+            <if test="deleted != null">deleted = #{deleted},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTProjectSlagyardById" parameterType="Long">
+        delete from t_project_slagyard where id = #{id}
+    </delete>
+
+    <delete id="deleteTProjectSlagyardByIds" parameterType="String">
+        delete from t_project_slagyard where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
