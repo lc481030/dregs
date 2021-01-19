@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dregs.project.system.project.mapper.TProjectMapper">
+    
+    <resultMap type="TProject" id="TProjectResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="name"    column="name"    />
+        <result property="pid"    column="pid"    />
+    </resultMap>
+
+    <sql id="selectTProjectVo">
+        select id, create_time, update_time, name, pid from t_project
+    </sql>
+
+    <select id="selectTProjectList" parameterType="TProject" resultMap="TProjectResult">
+        select t1.id, t1.create_time, t1.update_time, t1.name,IFNULL(t2.name,'无') as pName  from t_project as t1
+        LEFT JOIN t_project as t2 on t1.pid = t2.id
+        <where>
+            <if test="name != null  and name != ''"> and t1.name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectTProjectById" parameterType="Long" resultMap="TProjectResult">
+        <include refid="selectTProjectVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTProject" parameterType="TProject" useGeneratedKeys="true" keyProperty="id">
+        insert into t_project
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="name != null">name,</if>
+            <if test="pid != null">pid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="name != null">#{name},</if>
+            <if test="pid != null">#{pid},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTProject" parameterType="TProject">
+        update t_project
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="pid != null">pid = #{pid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTProjectById" parameterType="Long">
+        delete from t_project where id = #{id}
+    </delete>
+
+    <delete id="deleteTProjectByIds" parameterType="String">
+        delete from t_project where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
