@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改项目收支')" />
+    <th:block th:include="include :: select2-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-pay-edit" th:object="${tProjectPay}">
+            <input name="id" th:field="*{id}" type="hidden">
+
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">支付类型：</label>
+                <div class="col-sm-8">
+                    <input id="payTypeId" th:value="*{payType}" type="hidden">
+                    <select name="payType" id="payType" class="form-control m-b">
+                        <option value="">所有</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">关系：</label>
+                <input id="rId" th:value="*{relationId}" type="hidden">
+                <div class="col-sm-8">
+                    <select name="relationId" id="relationId" class="form-control" width="50">
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">金额：</label>
+                <div class="col-sm-8">
+                    <input name="money" th:field="*{money}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">收支：</label>
+                <div class="col-sm-8">
+                    <select name="type"  class="form-control" width="50" th:field="*{type}">
+                        <option value="1">收入</option>
+                        <option value="2">支出</option>
+                    </select>
+
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: select2-js" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/pay";
+        $("#form-pay-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-pay-edit').serialize());
+            }
+        }
+        var payTypeId = $("#payTypeId").val();
+        var arr = new Array();
+        var item = {"id":"","text":"所有","selected":payTypeId==''?true:false};
+        arr.push(item);
+        var item = {"id":"1","text":"车运","selected":payTypeId==1?true:false};
+        arr.push(item);
+        var item = {"id":"2","text":"渣费","selected":payTypeId==2?true:false};
+        arr.push(item);
+        var item = {"id":"3","text":"子项目","selected":payTypeId==3?true:false};
+        arr.push(item);
+        var item = {"id":"4","text":"其他","selected":payTypeId==4?true:false};
+        arr.push(item);
+        $('#payType').select2({
+            data: arr
+        });
+        var url = ctx + "system/pay/selectItem";
+        $.post(url,{'id':payTypeId,'rid':$("#rId").val()},function (d) {
+            $("#relationId").select2({
+                data: d
+            });
+        },"json");
+
+        $('#payType').on('select2:select', function (e) {
+            // 处理自己的业务
+            var typeId = e.params.data.id;
+            console.log(typeId)
+            if (typeId=="" || typeId == "4"){
+                $('#relationId').prop('disabled', true);
+            }else{
+                $('#relationId').prop('disabled', false);
+            }
+            $("#relationId").select2().empty();
+            var url = ctx + "system/pay/selectItem";
+            $.post(url,{'id':typeId},function (d) {
+                $("#relationId").select2({
+                    data: d
+                });
+            },"json");
+        });
+    </script>
+</body>
+</html>
