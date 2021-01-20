@@ -18,9 +18,29 @@
                                 </select>
                             </li>
                             <li>
-                                <label>收款方：</label>
-                                <select name="relationId" id="relationId" class="form-control" width="50">
+                                <label>车辆：</label>
+                                <select name="carId" id="carId" class="form-control" width="50">
+                                    <option value="">选择车辆</option>
+                                    <option th:each="car : ${carList}"  th:driver="${car.driver}"   th:carNumber="${car.carNum}"   th:text="${car.carNum+'['+car.driver+']'}" th:value="${car.id}"></option>
                                 </select>
+                                <input name="carNumber" value=""  class="form-control" type="hidden">
+                                <input name="driver" value=""  class="form-control" type="hidden">
+                            </li>
+                            <li>
+                                <label>项目：</label>
+                                <select name="projectSelect" id="projectSelect" class="form-control" width="50">
+                                    <option value="">选择项目</option>
+                                    <option th:each="s : ${projectList}" th:sid="${s.id}" th:text="${s.name}" th:value="${s.id}"></option>
+                                </select>
+                                <input name="projectId" value=""  class="form-control" type="hidden">
+                            </li>
+                            <li>
+                                <label>渣场：</label>
+                                <select name="slagyardSelect" id="slagyardSelect" class="form-control" width="50">
+                                    <option value="">选择渣场</option>
+                                    <option th:each="s : ${slagyardList}" th:sid="${s.id}" th:text="${s.title}" th:value="${s.id}"></option>
+                                </select>
+                                <input name="slagyardId" value=""  class="form-control" type="hidden">
                             </li>
                             <li>
                                 <label>收支：</label>
@@ -133,22 +153,16 @@
         $('#payType').select2({
             data: [{"id":"","text":"所有"},{"id":"1","text":"车运"},{"id":"2","text":"渣费"},{"id":"3","text":"子项目"},{"id":"4","text":"其他"}]
         });
-        $('#relationId').prop('disabled', true);
-        $('#payType').on('select2:select', function (e) {
-            // 处理自己的业务
-            var typeId = e.params.data.id;
-            if (typeId=="" || typeId == "4"){
-                $('#relationId').prop('disabled', true);
-            }else{
-                $('#relationId').prop('disabled', false);
-            }
-            $("#relationId").select2().empty();
-            var url = ctx + "system/pay/selectItem";
-            $.post(url,{'id':typeId},function (d) {
-                $("#relationId").select2({
-                    data: d
-                });
-            },"json");
+        $("select[name='slagyardSelect']").on("change",function () {
+            $("input[name='slagyardId']").val($("select[name='slagyardSelect']").find("option[value='"+this.value+"']").attr("sid"));
+        });
+
+        $("select[name='projectSelect']").on("change",function () {
+            $("input[name='projectId']").val($("select[name='projectSelect']").find("option[value='"+this.value+"']").attr("sid"));
+        });
+        $("select[name='carId']").on("change",function () {
+            $("input[name='carNumber']").val($("select[name='carId']").find("option[value='"+this.value+"']").attr("carNumber"));
+            $("input[name='driver']").val($("select[name='carId']").find("option[value='"+this.value+"']").attr("driver"));
         });
     </script>
 </body>

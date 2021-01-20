@@ -58,7 +58,15 @@ public class TProjectPayController extends BaseController {
 
     @RequiresPermissions("system:pay:view")
     @GetMapping()
-    public String pay() {
+    public String pay(ModelMap mmap) {
+        List<Slagyard> list =  slagyardService.selectSlagyardList(new Slagyard());
+        mmap.put("slagyardList",list);
+
+        List<TProject> listProject =  projectService.selectTProjectList(new TProject());
+        mmap.put("projectList",listProject);
+
+        List<Car> carList =  carService.selectCarList(new Car());
+        mmap.put("carList",carList);
         return prefix + "/pay";
     }
 

@@ -63,7 +63,7 @@ public class TProjectSlagyardController extends BaseController
     @RequiresPermissions("system:pslagyard:list")
     @PostMapping("/list")
     @ResponseBody
-    public TableDataInfo list(TProjectSlagyard tProjectSlagyard)
+    public TableDataInfo list(TProjectSlagyard tProjectSlagyard )
     {
         startPage();
         List<TProjectSlagyard> list = tProjectSlagyardService.selectTProjectSlagyardList(tProjectSlagyard);

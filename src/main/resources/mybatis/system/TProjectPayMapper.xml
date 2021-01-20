@@ -35,6 +35,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="beginTime != null and beginTime!=''"> <![CDATA[ and DATE_FORMAT(create_time,'%Y-%m-%d') >= #{beginTime}]]></if>
             <if test="endTime != null and endTime!=''"> <![CDATA[ and DATE_FORMAT(create_time,'%Y-%m-%d') <= #{endTime}]]></if>
+
+            <trim prefix=" and (" suffix=")" suffixOverrides="or">
+                <if test="carId != null">  relation_id = #{carId} or </if>
+                <if test="projectId != null ">  relation_id = #{projectId} or </if>
+                <if test="slagyardId != null">  relation_id = #{slagyardId} or </if>
+            </trim>
         </where>
         order by create_time desc
     </select>

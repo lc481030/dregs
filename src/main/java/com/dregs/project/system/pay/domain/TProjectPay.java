@@ -60,6 +60,34 @@ public class TProjectPay extends BaseEntity
     private String beginTime;
     private String endTime;
 
+    private Long carId;
+    private Long projectId;
+    private Long slagyardId;
+
+    public Long getCarId() {
+        return carId;
+    }
+
+    public void setCarId(Long carId) {
+        this.carId = carId;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
+    public Long getSlagyardId() {
+        return slagyardId;
+    }
+
+    public void setSlagyardId(Long slagyardId) {
+        this.slagyardId = slagyardId;
+    }
+
     public String getBeginTime() {
         return beginTime;
     }

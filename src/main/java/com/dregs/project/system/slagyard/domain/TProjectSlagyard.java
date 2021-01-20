@@ -50,7 +50,6 @@ public class TProjectSlagyard extends BaseEntity
     @Excel(name = "渣场名称")
     private String slagyardName;
 
-
     public void setId(Long id)
     {
         this.id = id;
