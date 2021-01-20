@@ -6,10 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.dregs.common.utils.StringUtils;
+import com.dregs.project.system.car.domain.Car;
+import com.dregs.project.system.car.service.ICarService;
 import com.dregs.project.system.project.domain.TProject;
 import com.dregs.project.system.project.service.ITProjectService;
 import com.dregs.project.system.slagyard.domain.Slagyard;
 import com.dregs.project.system.slagyard.service.ISlagyardService;
+import com.dregs.project.system.transport.domain.CarTransport;
+import com.dregs.project.system.transport.service.ICarTransportService;
 import com.dregs.project.system.user.domain.User;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +53,9 @@ public class TProjectPayController extends BaseController {
     @Autowired
     private ISlagyardService slagyardService;
 
+    @Autowired
+    private ICarService carService;
+
     @RequiresPermissions("system:pay:view")
     @GetMapping()
     public String pay() {
@@ -70,7 +77,10 @@ public class TProjectPayController extends BaseController {
                 tp.setPayTypeName("所有");
             } else if (tp.getPayType() == 1) {
                 tp.setPayTypeName("车运");
-
+                Car car = carService.selectCarById(tp.getRelationId());
+                if (car != null) {
+                    tp.setRelationName(car.getCarNum());
+                }
             } else if (tp.getPayType() == 2) {
                 tp.setPayTypeName("渣费");
                 Slagyard slagyard = slagyardService.selectSlagyardById(tp.getRelationId());
@@ -110,6 +120,10 @@ public class TProjectPayController extends BaseController {
                 tp.setPayTypeName("所有");
             } else if (tp.getPayType() == 1) {
                 tp.setPayTypeName("车运");
+                Car car = carService.selectCarById(tp.getRelationId());
+                if (car != null) {
+                    tp.setRelationName(car.getCarNum());
+                }
 
             } else if (tp.getPayType() == 2) {
                 tp.setPayTypeName("渣费");
@@ -205,7 +219,16 @@ public class TProjectPayController extends BaseController {
 
         List<Map<String, Object>> list = new ArrayList<>();
         if (StringUtils.isNotEmpty(id) && id.equals("1")) {
-
+           List<Car> carList = carService.selectCarList(new Car());
+            for (Car tp : carList) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("id", tp.getId().toString());
+                if (StringUtils.isNotEmpty(rid) && rid.equals(tp.getId().toString())) {
+                    map.put("selected", true);
+                }
+                map.put("text", tp.getCarNum());
+                list.add(map);
+            }
         } else if (StringUtils.isNotEmpty(id) && id.equals("2")) {
 
             List<Slagyard> slagyardList = slagyardService.selectSlagyardList(new Slagyard());
