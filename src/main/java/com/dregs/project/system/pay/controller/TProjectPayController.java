@@ -97,9 +97,9 @@ public class TProjectPayController extends BaseController {
                 tp.setPayTypeName("其他");
             }
             if (tp.getType() != null && tp.getType().equals("1")) {
-                tp.setTypeName("收入");
+                tp.setTypeName("实收");
             } else if (tp.getType() != null && tp.getType().equals("2")) {
-                tp.setTypeName("支出");
+                tp.setTypeName("实付");
             }
         }
         return getDataTable(list);
@@ -141,9 +141,9 @@ public class TProjectPayController extends BaseController {
                 tp.setPayTypeName("其他");
             }
             if (tp.getType() != null && tp.getType().equals("1")) {
-                tp.setTypeName("收入");
+                tp.setTypeName("实收");
             } else if (tp.getType() != null && tp.getType().equals("2")) {
-                tp.setTypeName("支出");
+                tp.setTypeName("实付");
             }
         }
         ExcelUtil<TProjectPay> util = new ExcelUtil<TProjectPay>(TProjectPay.class);

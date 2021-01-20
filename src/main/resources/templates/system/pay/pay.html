@@ -18,7 +18,7 @@
                                 </select>
                             </li>
                             <li>
-                                <label>关系：</label>
+                                <label>收款方：</label>
                                 <select name="relationId" id="relationId" class="form-control" width="50">
                                 </select>
                             </li>
@@ -26,8 +26,8 @@
                                 <label>收支：</label>
                                 <select name="type"  class="form-control" width="50">
                                     <option value="">所有</option>
-                                    <option value="1">收入</option>
-                                    <option value="2">支出</option>
+                                    <option value="1">实收</option>
+                                    <option value="2">实付</option>
                                 </select>
                             </li>
                             <li class="select-time">
@@ -107,7 +107,7 @@
                 },
                 {
                     field: 'relationName',
-                    title: '关系'
+                    title: '收款方'
                 },
                 {
                     field: 'typeName',
