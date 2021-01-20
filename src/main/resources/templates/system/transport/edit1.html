@@ -12,7 +12,7 @@
                 <label class="col-sm-3 control-label">车辆：</label>
                 <div class="col-sm-8">
                     <select name="relationSelect" class="form-control" th:field="*{relationId}"  width="50" >
-                        <option th:each="car : ${cars}" th:text="${car.carNum+'['+car.driver+']'}" th:value="${car.id}"></option>
+                        <option th:each="slagyard : ${slagyards}" th:text="${slagyard.title}" th:value="${slagyard.id}"></option>
                     </select>
                 </div>
             </div>

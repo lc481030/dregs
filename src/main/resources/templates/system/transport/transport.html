@@ -10,45 +10,28 @@
                 <form id="formId">
                     <div class="select-list">
                         <ul>
+
                             <li>
-                                <label>添加人：</label>
-                                <input type="text" name="addUserId"/>
-                            </li>
-                            <li>
-                                <label>添加人名称：</label>
-                                <input type="text" name="addName"/>
-                            </li>
-                            <li>
-                                <label>更新人：</label>
-                                <input type="text" name="updUserId"/>
-                            </li>
-                            <li>
-                                <label>更新人名称：</label>
-                                <input type="text" name="udpName"/>
-                            </li>
-                            <li>
-                                <label>车辆主键或者渣场主键：</label>
-                                <input type="text" name="relationId"/>
-                            </li>
-                            <li>
-                                <label>运输车数：</label>
-                                <input type="text" name="transportNum"/>
-                            </li>
-                            <li>
-                                <label>项目id：</label>
-                                <input type="text" name="projectId"/>
-                            </li>
-                            <li>
-                                <label>类型1车运2渣场：</label>
-                                <select name="transportType">
-                                    <option value="">所有</option>
-                                    <option value="-1">代码生成请选择字典属性</option>
+                                <label>类型：</label>
+                                <select name="transportType" required class="form-control m-b">
+                                    <option value="">--请选择--</option>
+                                    <option value="1">车运</option>
+                                    <option value="2">渣场</option>
                                 </select>
                             </li>
                             <li>
-                                <label>项目渣场关系表ID：</label>
-                                <input type="text" name="projectSlagyardId"/>
+                                <label>项目：</label>
+                                <input type="text" name="projectId"/>
                             </li>
+                            <li>
+                                <label>渣场：</label>
+                                <input type="text" name="projectId"/>
+                            </li>
+                            <li>
+                                <label>车辆：</label>
+                                <input type="text" name="projectId"/>
+                            </li>
+
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
                                 <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
@@ -100,40 +83,41 @@
                     visible: false
                 },
                 {
-                    field: 'addUserId',
-                    title: '添加人'
+                    field: 'transportType',
+                    title: '类型',
+                    formatter: function(value, row, index) {
+                        if(row.transportType==1){
+                            return '车运'
+                        }else if(row.transportType==2){
+                            return '渣场'
+                        }else{
+                            return '错误'
+                        }
+                    }
                 },
                 {
-                    field: 'addName',
-                    title: '添加人名称'
-                },
-                {
-                    field: 'updUserId',
-                    title: '更新人'
-                },
-                {
-                    field: 'udpName',
-                    title: '更新人名称'
-                },
-                {
-                    field: 'relationId',
-                    title: '车辆主键或者渣场主键'
+                    field: 'relationName',
+                    title: '车辆/渣场'
                 },
                 {
                     field: 'transportNum',
                     title: '运输车数'
                 },
                 {
-                    field: 'projectId',
-                    title: '项目id'
+                    field: 'projectName',
+                    title: '项目'
                 },
                 {
-                    field: 'transportType',
-                    title: '类型1车运2渣场'
+                    field: 'slagyardName',
+                    title: '渣场'
                 },
                 {
-                    field: 'projectSlagyardId',
-                    title: '项目渣场关系表ID'
+                    field: 'addName',
+                    title: '添加人'
+                },
+                {
+                    field: 'udpName',
+                    title: '更新人'
                 },
                 {
                     title: '操作',

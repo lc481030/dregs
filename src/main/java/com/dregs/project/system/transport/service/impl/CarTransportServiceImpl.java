@@ -1,7 +1,18 @@
 package com.dregs.project.system.transport.service.impl;
 
 import java.util.List;
+import java.util.Optional;
+
 import com.dregs.common.utils.DateUtils;
+import com.dregs.common.utils.security.ShiroUtils;
+import com.dregs.project.system.car.domain.Car;
+import com.dregs.project.system.car.mapper.CarMapper;
+import com.dregs.project.system.project.domain.TProject;
+import com.dregs.project.system.project.mapper.TProjectMapper;
+import com.dregs.project.system.slagyard.domain.Slagyard;
+import com.dregs.project.system.slagyard.domain.TProjectSlagyard;
+import com.dregs.project.system.slagyard.mapper.SlagyardMapper;
+import com.dregs.project.system.slagyard.mapper.TProjectSlagyardMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.dregs.project.system.transport.mapper.CarTransportMapper;
@@ -20,6 +31,17 @@ public class CarTransportServiceImpl implements ICarTransportService
 {
     @Autowired
     private CarTransportMapper carTransportMapper;
+
+    @Autowired
+    private TProjectSlagyardMapper tProjectSlagyardMapper;
+
+    @Autowired
+    private TProjectMapper tProjectMapper;
+    @Autowired
+    private SlagyardMapper slagyardMapper;
+
+    @Autowired
+    private CarMapper carMapper;
 
     /**
      * 查询车运
@@ -42,7 +64,47 @@ public class CarTransportServiceImpl implements ICarTransportService
     @Override
     public List<CarTransport> selectCarTransportList(CarTransport carTransport)
     {
-        return carTransportMapper.selectCarTransportList(carTransport);
+        List<CarTransport> list = carTransportMapper.selectCarTransportList(carTransport);
+
+        TProjectSlagyard projectSlagyard = new TProjectSlagyard();
+        List<TProjectSlagyard> list1 = tProjectSlagyardMapper.selectTProjectSlagyardList(projectSlagyard);
+        TProject project = new TProject();
+        List<TProject> projects = tProjectMapper.selectTProjectList(project);
+
+        List<Slagyard> slagyards = slagyardMapper.selectSlagyardList(new Slagyard());
+
+        List<Car> cars = carMapper.selectCarList(new Car());
+
+
+        for (CarTransport carTransp:list){
+            if (carTransp.getTransportType().toString().equals("1")){
+                Optional<Car> _car = cars.stream().filter(item->item.getId().toString().equals(carTransp.getRelationId().toString())).findFirst();
+                Car c = _car.get();
+                carTransp.setRelationName(c.getCarNum()+"["+c.getDriver()+"]");
+            }else if (carTransp.getTransportType().toString().equals("2")){
+                Optional<Slagyard> _slagyard = slagyards.stream().filter(item->item.getId().toString().equals(carTransp.getRelationId().toString())).findFirst();
+                Slagyard c = _slagyard.get();
+                carTransp.setRelationName(c.getTitle());
+            }else{
+                carTransp.setRelationName("数据错误");
+            }
+
+            Optional<TProjectSlagyard> option = list1.stream().filter(item->item.getId().equals(carTransp.getProjectSlagyardId())).findFirst();
+            if (option.isPresent()){
+                TProjectSlagyard tProjectSlagyard = option.get();
+                Optional<TProject> _project = projects.stream().filter(item->item.getId().toString().equals(tProjectSlagyard.getProjectId().toString())).findFirst();
+                if (_project.isPresent()){
+                    carTransp.setProjectName(_project.get().getName());
+                }
+
+                Optional<Slagyard> _slagyard = slagyards.stream().filter(item->item.getId().toString().equals(tProjectSlagyard.getSlagyardId().toString())).findFirst();
+                if (_slagyard.isPresent()){
+                    carTransp.setSlagyardName(_slagyard.get().getTitle());
+                }
+            }
+
+        }
+        return list;
     }
 
     /**
@@ -55,6 +117,10 @@ public class CarTransportServiceImpl implements ICarTransportService
     public int insertCarTransport(CarTransport carTransport)
     {
         carTransport.setCreateTime(DateUtils.getNowDate());
+        carTransport.setAddUserId(ShiroUtils.getUserId());
+        carTransport.setAddName(ShiroUtils.getLoginName());
+        TProjectSlagyard projectSlagyard = tProjectSlagyardMapper.selectTProjectSlagyardById(carTransport.getProjectSlagyardId());
+        carTransport.setProjectId(projectSlagyard.getProjectId());
         return carTransportMapper.insertCarTransport(carTransport);
     }
 
@@ -68,6 +134,11 @@ public class CarTransportServiceImpl implements ICarTransportService
     public int updateCarTransport(CarTransport carTransport)
     {
         carTransport.setUpdateTime(DateUtils.getNowDate());
+        carTransport.setUpdateTime(DateUtils.getNowDate());
+        carTransport.setUpdUserId(ShiroUtils.getUserId());
+        carTransport.setUdpName(ShiroUtils.getLoginName());
+        TProjectSlagyard projectSlagyard = tProjectSlagyardMapper.selectTProjectSlagyardById(carTransport.getProjectSlagyardId());
+        carTransport.setProjectId(projectSlagyard.getProjectId());
         return carTransportMapper.updateCarTransport(carTransport);
     }
 

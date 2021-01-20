@@ -26,15 +26,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectCarTransportList" parameterType="CarTransport" resultMap="CarTransportResult">
         <include refid="selectCarTransportVo"/>
         <where>  
-            <if test="addUserId != null "> and add_user_id = #{addUserId}</if>
+            <if test="addUserId != null and projectId !='' "> and add_user_id = #{addUserId}</if>
             <if test="addName != null  and addName != ''"> and add_name like concat('%', #{addName}, '%')</if>
-            <if test="updUserId != null "> and upd_user_id = #{updUserId}</if>
+            <if test="updUserId != null and updUserId !='' "> and upd_user_id = #{updUserId}</if>
             <if test="udpName != null  and udpName != ''"> and udp_name like concat('%', #{udpName}, '%')</if>
-            <if test="relationId != null "> and relation_id = #{relationId}</if>
-            <if test="transportNum != null "> and transport_num = #{transportNum}</if>
-            <if test="projectId != null "> and project_id = #{projectId}</if>
-            <if test="transportType != null "> and transport_type = #{transportType}</if>
-            <if test="projectSlagyardId != null "> and project_slagyard_id = #{projectSlagyardId}</if>
+            <if test="relationId != null and relationId !='' "> and relation_id = #{relationId}</if>
+            <if test="transportNum != null  "> and transport_num = #{transportNum}</if>
+            <if test="projectId != null and projectId !='' "> and project_id = #{projectId}</if>
+            <if test="transportType != null and transportType !='' "> and transport_type = #{transportType}</if>
+            <if test="projectSlagyardId != null and projectSlagyardId !='' "> and project_slagyard_id = #{projectSlagyardId}</if>
         </where>
     </select>
     

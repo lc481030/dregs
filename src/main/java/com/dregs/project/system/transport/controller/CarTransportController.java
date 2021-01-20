@@ -6,6 +6,14 @@ import com.dregs.framework.aspectj.lang.enums.BusinessType;
 import com.dregs.framework.web.controller.BaseController;
 import com.dregs.framework.web.domain.AjaxResult;
 import com.dregs.framework.web.page.TableDataInfo;
+import com.dregs.project.system.car.domain.Car;
+import com.dregs.project.system.car.service.ICarService;
+import com.dregs.project.system.project.domain.TProject;
+import com.dregs.project.system.project.service.ITProjectService;
+import com.dregs.project.system.slagyard.domain.Slagyard;
+import com.dregs.project.system.slagyard.domain.TProjectSlagyard;
+import com.dregs.project.system.slagyard.service.ISlagyardService;
+import com.dregs.project.system.slagyard.service.ITProjectSlagyardService;
 import com.dregs.project.system.transport.domain.CarTransport;
 import com.dregs.project.system.transport.service.ICarTransportService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -14,7 +22,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 车运Controller
@@ -28,8 +38,22 @@ public class CarTransportController extends BaseController
 {
     private String prefix = "system/transport";
 
+
+    @Autowired
+    private ISlagyardService slagyardService;
+
+    @Autowired
+    private ITProjectService projectService;
+
     @Autowired
     private ICarTransportService carTransportService;
+
+    @Autowired
+    private ITProjectSlagyardService tProjectSlagyardService;
+
+    @Autowired
+    private ICarService carService;
+
 
     @RequiresPermissions("system:transport:view")
     @GetMapping()
@@ -69,8 +93,28 @@ public class CarTransportController extends BaseController
      * 新增车运
      */
     @GetMapping("/add")
-    public String add()
+    public String add(ModelMap mmap)
     {
+        TProjectSlagyard projectSlagyard = new TProjectSlagyard();
+        List<TProjectSlagyard> list = tProjectSlagyardService.selectTProjectSlagyardList(projectSlagyard);
+        for (TProjectSlagyard ts:list){
+            Slagyard s = slagyardService.selectSlagyardById(ts.getSlagyardId());
+            if(s!=null){
+                ts.setSlagyardName(s.getTitle());
+            }
+            TProject project = projectService.selectTProjectById(Long.parseLong(ts.getProjectId()));
+            if (project!=null){
+                ts.setProjectName(project.getName());
+            }
+        }
+
+        Car car = new Car();
+        List<Car> cars = carService.selectCarList(car);
+        Slagyard slagyard = new Slagyard();
+        List<Slagyard> slagyards = slagyardService.selectSlagyardList(slagyard);
+        mmap.put("cars",cars);
+        mmap.put("slagyards",slagyards);
+        mmap.put("list",list);
         return prefix + "/add";
     }
 
@@ -94,7 +138,31 @@ public class CarTransportController extends BaseController
     {
         CarTransport carTransport = carTransportService.selectCarTransportById(id);
         mmap.put("carTransport", carTransport);
-        return prefix + "/edit";
+        TProjectSlagyard projectSlagyard = new TProjectSlagyard();
+        List<TProjectSlagyard> list = tProjectSlagyardService.selectTProjectSlagyardList(projectSlagyard);
+        for (TProjectSlagyard ts:list){
+            Slagyard s = slagyardService.selectSlagyardById(ts.getSlagyardId());
+            if(s!=null){
+                ts.setSlagyardName(s.getTitle());
+            }
+            TProject project = projectService.selectTProjectById(Long.parseLong(ts.getProjectId()));
+            if (project!=null){
+                ts.setProjectName(project.getName());
+            }
+        }
+
+        Car car = new Car();
+        List<Car> cars = carService.selectCarList(car);
+        Slagyard slagyard = new Slagyard();
+        List<Slagyard> slagyards = slagyardService.selectSlagyardList(slagyard);
+        mmap.put("cars",cars);
+        mmap.put("slagyards",slagyards);
+        mmap.put("list",list);
+        if(carTransport.getTransportType().equals(1)){
+            return prefix + "/edit";
+        }else{
+            return prefix + "/edit1";
+        }
     }
 
     /**
