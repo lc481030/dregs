@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增项目收支')" />
+    <th:block th:include="include :: select2-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-pay-add">
+
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">支付类型：</label>
+                <div class="col-sm-8">
+                    <select name="payType" id="payType" class="form-control" width="50">
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">关系：</label>
+                <div class="col-sm-8">
+                    <select name="relationId" id="relationId" class="form-control" width="50">
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">金额：</label>
+                <div class="col-sm-8">
+                    <input name="money" class="form-control" type="text">
+                </div>
+            </div>
+
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">收支：</label>
+                <div class="col-sm-8">
+                    <select name="type"  class="form-control" width="50">
+                        <option value="1">收入</option>
+                        <option value="2">支出</option>
+                    </select>
+
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: select2-js" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/pay"
+        $("#form-pay-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-pay-add').serialize());
+            }
+        }
+        $('#payType').select2({
+            data: [{"id":"","text":"所有"},{"id":"1","text":"车运"},{"id":"2","text":"渣费"},{"id":"3","text":"子项目"},{"id":"4","text":"其他"}]
+        });
+        $('#relationId').prop('disabled', true);
+        $('#payType').on('select2:select', function (e) {
+            // 处理自己的业务
+            var typeId = e.params.data.id;
+
+            if (typeId=="" || typeId == "4"){
+                $('#relationId').prop('disabled', true);
+            }else{
+                $('#relationId').prop('disabled', false);
+            }
+            $("#relationId").select2().empty();
+            var url = ctx + "system/pay/selectItem";
+            $.post(url,{'id':typeId},function (d) {
+                $("#relationId").select2({
+                    data: d
+                });
+            },"json");
+        });
+    </script>
+</body>
+</html>

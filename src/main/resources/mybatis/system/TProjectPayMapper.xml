@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dregs.project.system.pay.mapper.TProjectPayMapper">
+    
+    <resultMap type="TProjectPay" id="TProjectPayResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="addUserId"    column="add_user_id"    />
+        <result property="addName"    column="add_name"    />
+        <result property="updUserId"    column="upd_user_id"    />
+        <result property="udpName"    column="udp_name"    />
+        <result property="payType"    column="pay_type"    />
+        <result property="money"    column="money"    />
+        <result property="relationId"    column="relation_id"    />
+        <result property="type"    column="type"    />
+    </resultMap>
+
+    <sql id="selectTProjectPayVo">
+        select id, create_time, update_time, add_user_id, add_name, upd_user_id, udp_name, pay_type, money, relation_id, type from t_project__pay
+    </sql>
+
+    <select id="selectTProjectPayList" parameterType="TProjectPay" resultMap="TProjectPayResult">
+        <include refid="selectTProjectPayVo"/>
+        <where>  
+            <if test="addUserId != null "> and add_user_id = #{addUserId}</if>
+            <if test="addName != null  and addName != ''"> and add_name like concat('%', #{addName}, '%')</if>
+            <if test="updUserId != null "> and upd_user_id = #{updUserId}</if>
+            <if test="udpName != null  and udpName != ''"> and udp_name like concat('%', #{udpName}, '%')</if>
+            <if test="payType != null "> and pay_type = #{payType}</if>
+            <if test="money != null  and money != ''"> and money = #{money}</if>
+            <if test="relationId != null "> and relation_id = #{relationId}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="beginTime != null and beginTime!=''"> <![CDATA[ and DATE_FORMAT(create_time,'%Y-%m-%d') >= #{beginTime}]]></if>
+            <if test="endTime != null and endTime!=''"> <![CDATA[ and DATE_FORMAT(create_time,'%Y-%m-%d') <= #{endTime}]]></if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectTProjectPayById" parameterType="Long" resultMap="TProjectPayResult">
+        <include refid="selectTProjectPayVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTProjectPay" parameterType="TProjectPay" useGeneratedKeys="true" keyProperty="id">
+        insert into t_project__pay
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="addUserId != null">add_user_id,</if>
+            <if test="addName != null">add_name,</if>
+            <if test="updUserId != null">upd_user_id,</if>
+            <if test="udpName != null">udp_name,</if>
+            <if test="payType != null">pay_type,</if>
+            <if test="money != null">money,</if>
+            <if test="relationId != null">relation_id,</if>
+            <if test="type != null">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="addUserId != null">#{addUserId},</if>
+            <if test="addName != null">#{addName},</if>
+            <if test="updUserId != null">#{updUserId},</if>
+            <if test="udpName != null">#{udpName},</if>
+            <if test="payType != null">#{payType},</if>
+            <if test="money != null">#{money},</if>
+            <if test="relationId != null">#{relationId},</if>
+            <if test="type != null">#{type},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTProjectPay" parameterType="TProjectPay">
+        update t_project__pay
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="addUserId != null">add_user_id = #{addUserId},</if>
+            <if test="addName != null">add_name = #{addName},</if>
+            <if test="updUserId != null">upd_user_id = #{updUserId},</if>
+            <if test="udpName != null">udp_name = #{udpName},</if>
+            <if test="payType != null">pay_type = #{payType},</if>
+            <if test="money != null">money = #{money},</if>
+            <if test="relationId != null">relation_id = #{relationId},</if>
+            <if test="type != null">type = #{type},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTProjectPayById" parameterType="Long">
+        delete from t_project__pay where id = #{id}
+    </delete>
+
+    <delete id="deleteTProjectPayByIds" parameterType="String">
+        delete from t_project__pay where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
