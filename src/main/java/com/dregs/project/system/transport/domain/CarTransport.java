@@ -34,7 +34,7 @@ public class CarTransport extends BaseEntity
 
     /** 车辆主键或者渣场主键 */
 //    @Excel(name = "车辆主键或者渣场主键")
-    private Long relationId;
+    private Long carId;
 
     /** 车辆主键或者渣场主键 */
     @Excel(name = "车辆/渣场")
@@ -65,6 +65,15 @@ public class CarTransport extends BaseEntity
     /** 项目渣场关系表ID */
     @Excel(name = "渣场名")
     private String SlagyardName;
+
+    /** 渣场ID */
+    private String slagyardId;
+
+    @Excel(name = "支出单价")
+    private String money;
+
+    @Excel(name = "支出总价")
+    private String totalMoney;
 
 
 }

@@ -25,16 +25,16 @@
                     </select>
                 </div>
             </div>
-            <input name="relationId" value="" type="hidden" >
-            <div class="form-group" id="staType" style="display: none">
-                <label class="col-sm-3 control-label">渣场：</label>
-                <div class="col-sm-8">
-                    <select name="relationSelect" class="form-control" width="50" >
-                        <option value="">--请选择--</option>
-                        <option th:each="slagyard : ${slagyards}" th:text="${slagyard.title}" th:value="${slagyard.id}"></option>
-                    </select>
-                </div>
-            </div>
+            <input name="carId" value="" type="hidden" >
+<!--            <div class="form-group" id="staType" style="display: none">-->
+<!--                <label class="col-sm-3 control-label">渣场：</label>-->
+<!--                <div class="col-sm-8">-->
+<!--                    <select name="relationSelect" class="form-control" width="50" >-->
+<!--                        <option value="">&#45;&#45;请选择&#45;&#45;</option>-->
+<!--                        <option th:each="slagyard : ${slagyards}" th:text="${slagyard.title}" th:value="${slagyard.id}"></option>-->
+<!--                    </select>-->
+<!--                </div>-->
+<!--            </div>-->
 
             <div class="form-group">
                 <label class="col-sm-3 control-label">项目渣场：</label>
@@ -69,7 +69,7 @@
 
         $("select[name='relationSelect']").on("change",function () {
             console.log(":"+this.value)
-            $("input[name='relationId']").val(this.value);
+            $("input[name='carId']").val(this.value);
         });
 
         $("select[name='transportType']").on("change",function () {
@@ -77,11 +77,13 @@
             console.log("transportType:"+transportType)
             if (transportType == 1){
                 $("#carType").show();
-                $("#staType").hide();
+                $("select[name='relationSelect']").option[1].selected = true;//设置option第1个元素
+                // $("#staType").hide();
 
             }else if (transportType == 2){
-                $("#staType").show();
+                // $("#staType").show();
                 $("#carType").hide();
+                $("input[name='carId']").val('');
             }
         });
 

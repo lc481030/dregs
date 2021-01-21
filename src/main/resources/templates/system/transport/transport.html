@@ -2,6 +2,8 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <th:block th:include="include :: header('车运列表')" />
+    <th:block th:include="include :: datetimepicker-css" />
+    <th:block th:include="include :: select2-css" />
 </head>
 <body class="gray-bg">
      <div class="container-div">
@@ -21,15 +23,24 @@
                             </li>
                             <li>
                                 <label>项目：</label>
-                                <input type="text" name="projectId"/>
+                                <select name="projectId" class="form-control" width="50">
+                                    <option value="">选择项目</option>
+                                    <option th:each="s : ${projects}" th:sid="${s.id}" th:text="${s.name}" th:value="${s.id}"></option>
+                                </select>
                             </li>
                             <li>
                                 <label>渣场：</label>
-                                <input type="text" name="projectId"/>
+                                <select name="slagyardId" class="form-control" width="50">
+                                    <option value="">选择渣场</option>
+                                    <option th:each="s : ${slagyards}" th:sid="${s.id}" th:text="${s.title}" th:value="${s.id}"></option>
+                                </select>
                             </li>
                             <li>
                                 <label>车辆：</label>
-                                <input type="text" name="projectId"/>
+                                <select name="carId" class="form-control" width="50">
+                                    <option value="">选择车辆</option>
+                                    <option th:each="s : ${cars}" th:sid="${s.id}" th:text="${s.carNum+'['+s.driver+']'}" th:value="${s.id}"></option>
+                                </select>
                             </li>
 
                             <li>
@@ -61,6 +72,8 @@
         </div>
     </div>
     <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <th:block th:include="include :: select2-js" />
     <script th:inline="javascript">
         var editFlag = [[${@permission.hasPermi('system:transport:edit')}]];
         var removeFlag = [[${@permission.hasPermi('system:transport:remove')}]];
@@ -106,6 +119,14 @@
                 {
                     field: 'projectName',
                     title: '项目'
+                },
+                {
+                    field: 'money',
+                    title: '单价'
+                },
+                {
+                    field: 'totalMoney',
+                    title: '总价'
                 },
                 {
                     field: 'slagyardName',

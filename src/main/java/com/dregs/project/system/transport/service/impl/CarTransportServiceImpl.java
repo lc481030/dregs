@@ -78,23 +78,34 @@ public class CarTransportServiceImpl implements ICarTransportService
 
         for (CarTransport carTransp:list){
             if (carTransp.getTransportType().toString().equals("1")){
-                Optional<Car> _car = cars.stream().filter(item->item.getId().toString().equals(carTransp.getRelationId().toString())).findFirst();
+                Optional<Car> _car = cars.stream().filter(item->item.getId().toString().equals(carTransp.getCarId().toString())).findFirst();
                 Car c = _car.get();
                 carTransp.setRelationName(c.getCarNum()+"["+c.getDriver()+"]");
             }else if (carTransp.getTransportType().toString().equals("2")){
-                Optional<Slagyard> _slagyard = slagyards.stream().filter(item->item.getId().toString().equals(carTransp.getRelationId().toString())).findFirst();
+                Optional<Slagyard> _slagyard = slagyards.stream().filter(item->item.getId().toString().equals(carTransp.getSlagyardId().toString())).findFirst();
                 Slagyard c = _slagyard.get();
+                carTransp.setSlagyardName(c.getTitle());
                 carTransp.setRelationName(c.getTitle());
             }else{
                 carTransp.setRelationName("数据错误");
             }
 
+            Optional<TProject> _project = projects.stream().filter(item->item.getId().toString().equals(carTransp.getProjectId().toString())).findFirst();
+            if (_project.isPresent()){
+                carTransp.setProjectName(_project.get().getName());
+            }
+
             Optional<TProjectSlagyard> option = list1.stream().filter(item->item.getId().equals(carTransp.getProjectSlagyardId())).findFirst();
             if (option.isPresent()){
+
                 TProjectSlagyard tProjectSlagyard = option.get();
-                Optional<TProject> _project = projects.stream().filter(item->item.getId().toString().equals(tProjectSlagyard.getProjectId().toString())).findFirst();
-                if (_project.isPresent()){
-                    carTransp.setProjectName(_project.get().getName());
+
+                if (carTransp.getTransportType().toString().equals("1")){
+                    carTransp.setTotalMoney((carTransp.getTransportNum() * Long.parseLong(tProjectSlagyard.getPushCarMaoney()))+"");
+                    carTransp.setMoney(tProjectSlagyard.getPushCarMaoney());
+                }else if (carTransp.getTransportType().toString().equals("2")){
+                    carTransp.setTotalMoney((carTransp.getTransportNum() * Long.parseLong(tProjectSlagyard.getPushSlagyardMaoney()))+"");
+                    carTransp.setMoney(tProjectSlagyard.getPushSlagyardMaoney());
                 }
 
                 Optional<Slagyard> _slagyard = slagyards.stream().filter(item->item.getId().toString().equals(tProjectSlagyard.getSlagyardId().toString())).findFirst();
@@ -121,6 +132,7 @@ public class CarTransportServiceImpl implements ICarTransportService
         carTransport.setAddName(ShiroUtils.getLoginName());
         TProjectSlagyard projectSlagyard = tProjectSlagyardMapper.selectTProjectSlagyardById(carTransport.getProjectSlagyardId());
         carTransport.setProjectId(projectSlagyard.getProjectId());
+        carTransport.setSlagyardId(projectSlagyard.getSlagyardId().toString());
         return carTransportMapper.insertCarTransport(carTransport);
     }
 
@@ -139,6 +151,7 @@ public class CarTransportServiceImpl implements ICarTransportService
         carTransport.setUdpName(ShiroUtils.getLoginName());
         TProjectSlagyard projectSlagyard = tProjectSlagyardMapper.selectTProjectSlagyardById(carTransport.getProjectSlagyardId());
         carTransport.setProjectId(projectSlagyard.getProjectId());
+        carTransport.setSlagyardId(projectSlagyard.getSlagyardId().toString());
         return carTransportMapper.updateCarTransport(carTransport);
     }
 

@@ -57,8 +57,14 @@ public class CarTransportController extends BaseController
 
     @RequiresPermissions("system:transport:view")
     @GetMapping()
-    public String transport()
+    public String transport(ModelMap mmap)
     {
+        List<TProject> projects = projectService.selectTProjectList(new TProject());
+        List<Car> cars = carService.selectCarList(new Car());
+        List<Slagyard> slagyards = slagyardService.selectSlagyardList(new Slagyard());
+        mmap.put("projects",projects);
+        mmap.put("cars",cars);
+        mmap.put("slagyards",slagyards);
         return prefix + "/transport";
     }
 
@@ -158,7 +164,7 @@ public class CarTransportController extends BaseController
         mmap.put("cars",cars);
         mmap.put("slagyards",slagyards);
         mmap.put("list",list);
-        if(carTransport.getTransportType().equals(1)){
+        if(carTransport.getTransportType().toString().equals("1")){
             return prefix + "/edit";
         }else{
             return prefix + "/edit1";

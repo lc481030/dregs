@@ -12,15 +12,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="addName"    column="add_name"    />
         <result property="updUserId"    column="upd_user_id"    />
         <result property="udpName"    column="udp_name"    />
-        <result property="relationId"    column="relation_id"    />
+        <result property="carId"    column="car_id"    />
         <result property="transportNum"    column="transport_num"    />
         <result property="projectId"    column="project_id"    />
         <result property="transportType"    column="transport_type"    />
         <result property="projectSlagyardId"    column="project_slagyard_id"    />
+        <result property="slagyardId"    column="slagyard_id"    />
     </resultMap>
 
     <sql id="selectCarTransportVo">
-        select id, create_time, update_time, add_user_id, add_name, upd_user_id, udp_name, relation_id, transport_num, project_id, transport_type, project_slagyard_id from t_car_transport
+        select id, create_time, update_time, slagyard_id,add_user_id, add_name, upd_user_id, udp_name, car_id, transport_num, project_id, transport_type, project_slagyard_id from t_car_transport
     </sql>
 
     <select id="selectCarTransportList" parameterType="CarTransport" resultMap="CarTransportResult">
@@ -30,11 +31,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="addName != null  and addName != ''"> and add_name like concat('%', #{addName}, '%')</if>
             <if test="updUserId != null and updUserId !='' "> and upd_user_id = #{updUserId}</if>
             <if test="udpName != null  and udpName != ''"> and udp_name like concat('%', #{udpName}, '%')</if>
-            <if test="relationId != null and relationId !='' "> and relation_id = #{relationId}</if>
+            <if test="carId != null and carId !='' "> and car_id = #{carId}</if>
             <if test="transportNum != null  "> and transport_num = #{transportNum}</if>
             <if test="projectId != null and projectId !='' "> and project_id = #{projectId}</if>
             <if test="transportType != null and transportType !='' "> and transport_type = #{transportType}</if>
             <if test="projectSlagyardId != null and projectSlagyardId !='' "> and project_slagyard_id = #{projectSlagyardId}</if>
+            <if test="slagyardId != null and slagyardId !='' "> and slagyard_id = #{slagyardId}</if>
         </where>
     </select>
     
@@ -52,11 +54,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="addName != null">add_name,</if>
             <if test="updUserId != null">upd_user_id,</if>
             <if test="udpName != null">udp_name,</if>
-            <if test="relationId != null">relation_id,</if>
+            <if test="carId != null">car_id,</if>
             <if test="transportNum != null">transport_num,</if>
             <if test="projectId != null">project_id,</if>
             <if test="transportType != null">transport_type,</if>
             <if test="projectSlagyardId != null">project_slagyard_id,</if>
+            <if test="slagyardId != null">slagyard_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="createTime != null">#{createTime},</if>
@@ -65,11 +68,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="addName != null">#{addName},</if>
             <if test="updUserId != null">#{updUserId},</if>
             <if test="udpName != null">#{udpName},</if>
-            <if test="relationId != null">#{relationId},</if>
+            <if test="carId != null">#{carId},</if>
             <if test="transportNum != null">#{transportNum},</if>
             <if test="projectId != null">#{projectId},</if>
             <if test="transportType != null">#{transportType},</if>
             <if test="projectSlagyardId != null">#{projectSlagyardId},</if>
+            <if test="slagyardId != null">#{slagyardId},</if>
          </trim>
     </insert>
 
@@ -82,11 +86,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="addName != null">add_name = #{addName},</if>
             <if test="updUserId != null">upd_user_id = #{updUserId},</if>
             <if test="udpName != null">udp_name = #{udpName},</if>
-            <if test="relationId != null">relation_id = #{relationId},</if>
+            <if test="carId != null">car_id = #{carId},</if>
             <if test="transportNum != null">transport_num = #{transportNum},</if>
             <if test="projectId != null">project_id = #{projectId},</if>
             <if test="transportType != null">transport_type = #{transportType},</if>
             <if test="projectSlagyardId != null">project_slagyard_id = #{projectSlagyardId},</if>
+            <if test="slagyardId != null">slagyard_id = #{slagyardId},</if>
         </trim>
         where id = #{id}
     </update>
