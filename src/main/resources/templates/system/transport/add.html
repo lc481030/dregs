@@ -11,6 +11,7 @@
                 <div class="col-sm-8">
                     <select name="transportType" required class="form-control m-b">
                         <option value="">--请选择--</option>
+                        <option value="0">实发票</option>
                         <option value="1">车运</option>
                         <option value="2">渣场</option>
                     </select>
@@ -41,7 +42,7 @@
                 <div class="col-sm-8">
                     <select name="projectSlagyardId" class="form-control" width="50" >
                         <option>--请选择--</option>
-                        <option th:each="p : ${list}" th:text="${p.projectName+'—到—'+p.slagyardName+''}" th:value="${p.id}"></option>
+                        <option th:each="p : ${list}" th:text="${p.projectName+'——'+p.slagyardName+''}" th:value="${p.id}"></option>
                     </select>
                 </div>
             </div>
@@ -81,6 +82,10 @@
                 // $("#staType").hide();
 
             }else if (transportType == 2){
+                // $("#staType").show();
+                $("#carType").hide();
+                $("input[name='carId']").val('');
+            }else if (transportType == 0){
                 // $("#staType").show();
                 $("#carType").hide();
                 $("input[name='carId']").val('');

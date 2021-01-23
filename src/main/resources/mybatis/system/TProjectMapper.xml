@@ -28,7 +28,60 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectTProjectVo"/>
         where id = #{id}
     </select>
-        
+
+
+    <select id="selectStaProjectList" parameterType="StaProject" resultType="com.dregs.project.system.project.domain.StaProject">
+        SELECT p.name ,sum(money) as pullMoney,sum(pushNum) as pushTotal ,sum(carNum) as carTotal ,sum(slaNum) as slaTotal
+                , sum(money1) as pullTotalMoney,sum(money2) as pushCarTotalMoney,sum(money3) as pushSlaTotalMoney
+        FROM (SELECT
+                  t.project_slagyard_id,
+                  t.transport_num,
+                  t.car_id,
+                  t.project_id,
+                  t.slagyard_id,
+                  t.transport_type,
+                  ps.pull_money,
+                  ps.push_car_maoney,
+                  ps.push_slagyard_maoney,
+                  CASE t.transport_type
+                      WHEN 0 THEN (ps.pull_money * t.transport_num)
+                      WHEN 1 THEN -(ps.push_car_maoney * t.transport_num)
+                      WHEN 2 THEN -(ps.push_slagyard_maoney * t.transport_num)
+                      END 'money',
+                  CASE t.transport_type
+                      WHEN 0 THEN (ps.pull_money * t.transport_num)
+                      ELSE 0
+                      END 'money1',
+
+                  CASE t.transport_type
+                      WHEN 1 THEN (ps.push_car_maoney * t.transport_num)
+                      ELSE 0
+                      END 'money2',
+
+                  CASE t.transport_type
+                      WHEN 2 THEN (ps.push_slagyard_maoney * t.transport_num)
+                      ELSE 0
+                      END 'money3',
+                  CASE t.transport_type
+                      WHEN 0 THEN t.transport_num
+                      ELSE 0
+                      END 'pushNum',
+
+                  CASE t.transport_type
+                      WHEN 1 THEN t.transport_num
+                      ELSE 0
+                      END 'carNum',
+
+                  CASE t.transport_type
+                      WHEN 2 THEN t.transport_num
+                      ELSE 0
+                      END 'slaNum'
+              FROM
+                  t_car_transport as t,t_project_slagyard as ps WHERE t.project_slagyard_id = ps.id
+             ) as result
+                 LEFT JOIN t_project as p ON p.id = result.project_id
+        GROUP BY result.project_id
+    </select>
     <insert id="insertTProject" parameterType="TProject" useGeneratedKeys="true" keyProperty="id">
         insert into t_project
         <trim prefix="(" suffix=")" suffixOverrides=",">

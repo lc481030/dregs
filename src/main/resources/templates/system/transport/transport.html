@@ -17,6 +17,7 @@
                                 <label>类型：</label>
                                 <select name="transportType" required class="form-control m-b">
                                     <option value="">--请选择--</option>
+                                    <option value="0">实发票</option>
                                     <option value="1">车运</option>
                                     <option value="2">渣场</option>
                                 </select>
@@ -103,6 +104,8 @@
                             return '车运'
                         }else if(row.transportType==2){
                             return '渣场'
+                        }else if(row.transportType==0){
+                            return '实发票'
                         }else{
                             return '错误'
                         }
@@ -116,10 +119,7 @@
                     field: 'transportNum',
                     title: '运输车数'
                 },
-                {
-                    field: 'projectName',
-                    title: '项目'
-                },
+
                 {
                     field: 'money',
                     title: '单价'
@@ -127,6 +127,10 @@
                 {
                     field: 'totalMoney',
                     title: '总价'
+                },
+                {
+                    field: 'projectName',
+                    title: '项目'
                 },
                 {
                     field: 'slagyardName',

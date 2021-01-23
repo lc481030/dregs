@@ -1,6 +1,8 @@
 package com.dregs.project.system.project.controller;
 
 import java.util.List;
+
+import com.dregs.project.system.project.domain.StaProject;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +35,27 @@ public class TProjectController extends BaseController
 
     @Autowired
     private ITProjectService tProjectService;
+
+    @RequiresPermissions("system:project:view")
+    @GetMapping("/staProject")
+    public String staProject()
+    {
+        return prefix + "/staProject";
+    }
+
+    /**
+     * 查询项目管理统计
+     */
+    @RequiresPermissions("system:project:list")
+    @PostMapping("/stalist")
+    @ResponseBody
+    public TableDataInfo stalist(StaProject staProject)
+    {
+        startPage();
+        List<StaProject> list = tProjectService.selectStaProjectList(staProject);
+        return getDataTable(list);
+    }
+
 
     @RequiresPermissions("system:project:view")
     @GetMapping()

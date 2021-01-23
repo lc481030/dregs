@@ -2,6 +2,7 @@ package com.dregs.project.system.project.service.impl;
 
 import java.util.List;
 import com.dregs.common.utils.DateUtils;
+import com.dregs.project.system.project.domain.StaProject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.dregs.project.system.project.mapper.TProjectMapper;
@@ -93,5 +94,10 @@ public class TProjectServiceImpl implements ITProjectService
     public int deleteTProjectById(Long id)
     {
         return tProjectMapper.deleteTProjectById(id);
+    }
+
+    @Override
+    public List<StaProject> selectStaProjectList(StaProject staProject) {
+        return tProjectMapper.selectStaProjectList(staProject);
     }
 }

@@ -1,6 +1,8 @@
 package com.dregs.project.system.project.service;
 
 import java.util.List;
+
+import com.dregs.project.system.project.domain.StaProject;
 import com.dregs.project.system.project.domain.TProject;
 
 /**
@@ -58,4 +60,6 @@ public interface ITProjectService
      * @return 结果
      */
     public int deleteTProjectById(Long id);
+
+    List<StaProject> selectStaProjectList(StaProject staProject);
 }

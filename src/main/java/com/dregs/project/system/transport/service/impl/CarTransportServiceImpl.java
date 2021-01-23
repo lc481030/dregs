@@ -77,6 +77,12 @@ public class CarTransportServiceImpl implements ICarTransportService
 
 
         for (CarTransport carTransp:list){
+
+            Optional<TProject> _project = projects.stream().filter(item->item.getId().toString().equals(carTransp.getProjectId().toString())).findFirst();
+            if (_project.isPresent()){
+                carTransp.setProjectName(_project.get().getName());
+            }
+
             if (carTransp.getTransportType().toString().equals("1")){
                 Optional<Car> _car = cars.stream().filter(item->item.getId().toString().equals(carTransp.getCarId().toString())).findFirst();
                 Car c = _car.get();
@@ -86,14 +92,13 @@ public class CarTransportServiceImpl implements ICarTransportService
                 Slagyard c = _slagyard.get();
                 carTransp.setSlagyardName(c.getTitle());
                 carTransp.setRelationName(c.getTitle());
+            }else if (carTransp.getTransportType().toString().equals("0")){
+                carTransp.setRelationName(carTransp.getProjectName());
             }else{
                 carTransp.setRelationName("数据错误");
             }
 
-            Optional<TProject> _project = projects.stream().filter(item->item.getId().toString().equals(carTransp.getProjectId().toString())).findFirst();
-            if (_project.isPresent()){
-                carTransp.setProjectName(_project.get().getName());
-            }
+
 
             Optional<TProjectSlagyard> option = list1.stream().filter(item->item.getId().equals(carTransp.getProjectSlagyardId())).findFirst();
             if (option.isPresent()){
@@ -106,6 +111,9 @@ public class CarTransportServiceImpl implements ICarTransportService
                 }else if (carTransp.getTransportType().toString().equals("2")){
                     carTransp.setTotalMoney((carTransp.getTransportNum() * Long.parseLong(tProjectSlagyard.getPushSlagyardMaoney()))+"");
                     carTransp.setMoney(tProjectSlagyard.getPushSlagyardMaoney());
+                }else if (carTransp.getTransportType().toString().equals("0")){
+                    carTransp.setTotalMoney((carTransp.getTransportNum() * Long.parseLong(tProjectSlagyard.getPullMoney()))+"");
+                    carTransp.setMoney(tProjectSlagyard.getPullMoney());
                 }
 
                 Optional<Slagyard> _slagyard = slagyards.stream().filter(item->item.getId().toString().equals(tProjectSlagyard.getSlagyardId().toString())).findFirst();

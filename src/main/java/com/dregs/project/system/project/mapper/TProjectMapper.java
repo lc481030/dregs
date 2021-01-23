@@ -1,6 +1,8 @@
 package com.dregs.project.system.project.mapper;
 
 import java.util.List;
+
+import com.dregs.project.system.project.domain.StaProject;
 import com.dregs.project.system.project.domain.TProject;
 
 /**
@@ -58,4 +60,6 @@ public interface TProjectMapper
      * @return 结果
      */
     public int deleteTProjectByIds(String[] ids);
+
+    List<StaProject> selectStaProjectList(StaProject staProject);
 }
