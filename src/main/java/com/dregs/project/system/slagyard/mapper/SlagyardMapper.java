@@ -59,4 +59,6 @@ public interface SlagyardMapper
      * @return 结果
      */
     public int deleteSlagyardByIds(String[] ids);
+
+    List<Slagyard> selectSlagyardByPayList();
 }

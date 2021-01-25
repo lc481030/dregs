@@ -1,5 +1,6 @@
 package com.dregs.project.system.slagyard.service;
 
+import com.dregs.project.system.car.domain.Car;
 import com.dregs.project.system.slagyard.domain.Slagyard;
 
 import java.util.List;
@@ -59,4 +60,6 @@ public interface ISlagyardService
      * @return 结果
      */
     public int deleteSlagyardById(Long id);
+
+    List<Slagyard> selectSlagyardByPayList();
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.dregs.project.system.project.domain.StaProject;
 import com.dregs.project.system.project.domain.TProject;
+import com.dregs.project.system.slagyard.domain.Slagyard;
 
 /**
  * 项目管理Service接口
@@ -64,4 +65,9 @@ public interface ITProjectService
     List<StaProject> selectStaProjectList(StaProject staProject);
 
     List<StaProject> selectStaCarlist(StaProject staProject);
+
+
+    List<TProject> selectProjectByPayList();
+
+    List<TProject> selectProjectObjByPayList();
 }

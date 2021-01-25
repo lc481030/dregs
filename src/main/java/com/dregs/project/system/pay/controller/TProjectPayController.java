@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.dregs.common.utils.StringUtils;
 import com.dregs.project.system.car.domain.Car;
@@ -86,25 +88,38 @@ public class TProjectPayController extends BaseController {
     public TableDataInfo list(TProjectPay tProjectPay) {
         startPage();
         List<TProjectPay> list = tProjectPayService.selectTProjectPayList(tProjectPay);
+        List<Car> carList = this.carService.selectCarByPayList();
+        Map<Long, Car> carMap = carList.stream().collect(Collectors.toMap(Car::getId, Function.identity(), (key1, key2) -> key2));
+
+        List<Slagyard> slagyardList = this.slagyardService.selectSlagyardByPayList();
+        Map<Long, Slagyard> slagyardMap = slagyardList.stream().collect(Collectors.toMap(Slagyard::getId, Function.identity(), (key1, key2) -> key2));
+
+        List<TProject> projectList = this.projectService.selectProjectByPayList();
+        Map<Long, TProject> projectMap = projectList.stream().collect(Collectors.toMap(TProject::getId, Function.identity(), (key1, key2) -> key2));
+
+        List<TProject> payObjList = this.projectService.selectProjectObjByPayList();
+        Map<Long, TProject> payObjMap = payObjList.stream().collect(Collectors.toMap(TProject::getId, Function.identity(), (key1, key2) -> key2));
+
         for (TProjectPay tp : list) {
             // [{"id":"","text":"所有"},{"id":"1","text":"车运"},{"id":"2","text":"渣费"},{"id":"3","text":"子项目"},{"id":"4","text":"其他"}]
             if (tp.getPayType() == null) {
                 tp.setPayTypeName("所有");
             } else if (tp.getPayType() == 1) {
                 tp.setPayTypeName("车运");
-                Car car = carService.selectCarById(tp.getRelationId());
+                Car car = carMap.get(tp.getRelationId());
                 if (car != null) {
                     tp.setRelationName(car.getCarNum());
                 }
+
             } else if (tp.getPayType() == 2) {
                 tp.setPayTypeName("渣费");
-                Slagyard slagyard = slagyardService.selectSlagyardById(tp.getRelationId());
+                Slagyard slagyard = slagyardMap.get(tp.getRelationId());
                 if (slagyard != null) {
                     tp.setRelationName(slagyard.getTitle());
                 }
             } else if (tp.getPayType() == 3) {
                 tp.setPayTypeName("子项目");
-                TProject tProject = projectService.selectTProjectById(tp.getRelationId());
+                TProject tProject = projectMap.get(tp.getRelationId());
                 if (tProject != null) {
                     tp.setRelationName(tProject.getName());
                 }
@@ -116,12 +131,14 @@ public class TProjectPayController extends BaseController {
             } else if (tp.getType() != null && tp.getType().equals("2")) {
                 tp.setTypeName("实付");
             }
-            String payObjName;
+            String payObjName = "";
             if (tp.getPayObjId()==null || tp.getPayObjId()==0L){
                 payObjName = "甲方付款";
             }else{
-                TProject t = projectService.selectTProjectById(tp.getPayObjId());
-                payObjName = t.getName();
+                TProject t = payObjMap.get(tp.getPayObjId());
+                if (t!=null) {
+                    payObjName = t.getName();
+                }
             }
 
             tp.setPayObjName(payObjName);
@@ -138,26 +155,38 @@ public class TProjectPayController extends BaseController {
     @ResponseBody
     public AjaxResult export(TProjectPay tProjectPay) {
         List<TProjectPay> list = tProjectPayService.selectTProjectPayList(tProjectPay);
+        List<Car> carList = this.carService.selectCarByPayList();
+        Map<Long, Car> carMap = carList.stream().collect(Collectors.toMap(Car::getId, Function.identity(), (key1, key2) -> key2));
+
+        List<Slagyard> slagyardList = this.slagyardService.selectSlagyardByPayList();
+        Map<Long, Slagyard> slagyardMap = slagyardList.stream().collect(Collectors.toMap(Slagyard::getId, Function.identity(), (key1, key2) -> key2));
+
+        List<TProject> projectList = this.projectService.selectProjectByPayList();
+        Map<Long, TProject> projectMap = projectList.stream().collect(Collectors.toMap(TProject::getId, Function.identity(), (key1, key2) -> key2));
+
+        List<TProject> payObjList = this.projectService.selectProjectObjByPayList();
+        Map<Long, TProject> payObjMap = payObjList.stream().collect(Collectors.toMap(TProject::getId, Function.identity(), (key1, key2) -> key2));
+
         for (TProjectPay tp : list) {
             // [{"id":"","text":"所有"},{"id":"1","text":"车运"},{"id":"2","text":"渣费"},{"id":"3","text":"子项目"},{"id":"4","text":"其他"}]
             if (tp.getPayType() == null) {
                 tp.setPayTypeName("所有");
             } else if (tp.getPayType() == 1) {
                 tp.setPayTypeName("车运");
-                Car car = carService.selectCarById(tp.getRelationId());
+                Car car = carMap.get(tp.getRelationId());
                 if (car != null) {
                     tp.setRelationName(car.getCarNum());
                 }
 
             } else if (tp.getPayType() == 2) {
                 tp.setPayTypeName("渣费");
-                Slagyard slagyard = slagyardService.selectSlagyardById(tp.getRelationId());
+                Slagyard slagyard = slagyardMap.get(tp.getRelationId());
                 if (slagyard != null) {
                     tp.setRelationName(slagyard.getTitle());
                 }
             } else if (tp.getPayType() == 3) {
                 tp.setPayTypeName("子项目");
-                TProject tProject = projectService.selectTProjectById(tp.getRelationId());
+                TProject tProject = projectMap.get(tp.getRelationId());
                 if (tProject != null) {
                     tp.setRelationName(tProject.getName());
                 }
@@ -169,12 +198,14 @@ public class TProjectPayController extends BaseController {
             } else if (tp.getType() != null && tp.getType().equals("2")) {
                 tp.setTypeName("实付");
             }
-            String payObjName;
+            String payObjName = "";
             if (tp.getPayObjId()==null || tp.getPayObjId()==0L){
                 payObjName = "甲方付款";
             }else{
-                TProject t = projectService.selectTProjectById(tp.getPayObjId());
-                payObjName = t.getName();
+                TProject t = payObjMap.get(tp.getPayObjId());
+                if (t!=null) {
+                    payObjName = t.getName();
+                }
             }
 
             tp.setPayObjName(payObjName);

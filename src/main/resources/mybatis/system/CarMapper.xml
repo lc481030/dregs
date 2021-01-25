@@ -46,11 +46,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
         </where>
     </select>
+    <select id="selectCarByPayList" parameterType="Car" resultMap="CarResult">
+       select * from t_car tc  where EXISTS(select t.id from t_project_pay t where t.relation_id = tc.id and t.pay_type = 1)
+    </select>
     
     <select id="selectCarById" parameterType="Long" resultMap="CarResult">
         <include refid="selectCarVo"/>
         where id = #{id}
     </select>
+
+
         
     <insert id="insertCar" parameterType="Car" useGeneratedKeys="true" keyProperty="id">
         insert into t_car

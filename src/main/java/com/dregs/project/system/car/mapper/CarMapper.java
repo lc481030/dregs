@@ -59,4 +59,6 @@ public interface CarMapper
      * @return 结果
      */
     public int deleteCarByIds(String[] ids);
+
+    List<Car> selectCarByPayList();
 }

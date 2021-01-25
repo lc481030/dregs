@@ -105,4 +105,14 @@ public class TProjectServiceImpl implements ITProjectService
     public List<StaProject> selectStaCarlist(StaProject staProject) {
         return tProjectMapper.selectStaCarByProjectId(staProject);
     }
+
+    @Override
+    public List<TProject> selectProjectByPayList() {
+        return tProjectMapper.selectProjectByPayList();
+    }
+
+    @Override
+    public List<TProject> selectProjectObjByPayList() {
+        return tProjectMapper.selectProjectObjByPayList();
+    }
 }

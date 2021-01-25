@@ -62,4 +62,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
+
+    <select id="selectSlagyardByPayList"  parameterType="Slagyard" resultMap="SlagyardResult">
+       select * from t_slagyard ts  where EXISTS(select t.id from t_project_pay t where t.relation_id = ts.id and t.pay_type = 2)
+    </select>
+
 </mapper>

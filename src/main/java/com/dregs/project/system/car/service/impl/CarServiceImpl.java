@@ -46,6 +46,11 @@ public class CarServiceImpl implements ICarService
         return carMapper.selectCarList(car);
     }
 
+    @Override
+    public List<Car> selectCarByPayList() {
+        return carMapper.selectCarByPayList();
+    }
+
     /**
      * 新增车辆信息
      * 

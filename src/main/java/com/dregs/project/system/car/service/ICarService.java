@@ -28,6 +28,9 @@ public interface ICarService
      */
     public List<Car> selectCarList(Car car);
 
+
+    List<Car> selectCarByPayList();
+
     /**
      * 新增车辆信息
      * 

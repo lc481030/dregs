@@ -95,4 +95,9 @@ public class SlagyardServiceImpl implements ISlagyardService
     {
         return slagyardMapper.deleteSlagyardById(id);
     }
+
+    @Override
+    public List<Slagyard> selectSlagyardByPayList() {
+        return slagyardMapper.selectSlagyardByPayList();
+    }
 }

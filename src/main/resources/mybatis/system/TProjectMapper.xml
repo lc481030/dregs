@@ -29,6 +29,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
 
+    <select id="selectProjectByPayList" parameterType="TProject" resultType="TProject">
+        select * from t_project tp  where EXISTS(select t.id from t_project_pay t where t.relation_id = tp.id and t.pay_type = 3)
+    </select>
+
+    <select id="selectProjectObjByPayList" parameterType="TProject" resultType="TProject">
+        select * from t_project tp  where EXISTS(select t.id from t_project_pay t where t.pay_obj_id = tp.id)
+    </select>
+
     <select id="selectStaCarByProjectId" parameterType="Long" resultType="com.dregs.project.system.project.domain.StaCarProject">
         SELECT
             t.* ,c.car_num

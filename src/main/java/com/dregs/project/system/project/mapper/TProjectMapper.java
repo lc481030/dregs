@@ -64,4 +64,8 @@ public interface TProjectMapper
     List<StaProject> selectStaProjectList(StaProject staProject);
 
     List<StaProject> selectStaCarByProjectId(StaProject staProject);
+
+    List<TProject> selectProjectByPayList();
+
+    List<TProject> selectProjectObjByPayList();
 }

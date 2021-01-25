@@ -65,6 +65,8 @@ public class TProjectPay extends BaseEntity
     private Long slagyardId;
 
     private Long payObjId;
+
+    @Excel(name = "付款方")
     private String payObjName;
 
     public String getPayObjName() {
