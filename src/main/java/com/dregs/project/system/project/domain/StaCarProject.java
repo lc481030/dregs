@@ -9,45 +9,34 @@ public class StaCarProject extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
-    /** 主键 */
-    private Long id;
-
-    /** 添加人 */
-    private Long addUserId;
-
-    /** 添加人名称 */
-    @Excel(name = "添加人")
-    private String addName;
-
-    /** 更新人 */
-    private Long updUserId;
-
-    /** 更新人名称 */
-    @Excel(name = "更新人")
-    private String udpName;
-
     private Long carId;
 
     /** 车辆主键或者渣场主键 */
     @Excel(name = "车辆/渣场")
-    private String relationName;
+    private String carNum;
+
+
+    /** 车辆主键或者渣场主键 */
+    @Excel(name = "已付")
+    private String payMoney;
 
     /** 运输车数 */
     @Excel(name = "运输车数")
     private Long transportNum;
 
     /** 项目渣场关系表ID */
-    @Excel(name = "项目名")
+    @Excel(name = "项目")
     private String projectName;
 
-    /** 项目渣场关系表ID */
-    @Excel(name = "渣场名")
-    private String SlagyardName;
 
     @Excel(name = "支出单价")
-    private String money;
+    private String pushCarMoney;
 
     @Excel(name = "支出总价")
     private String totalMoney;
+
+
+    @Excel(name = "渣场")
+    private String slaName;
 
 }

@@ -7,9 +7,13 @@ import lombok.Data;
 @Data
 public class StaProject extends BaseEntity {
 
+    private String carId;
+
     /*项目名称*/
     @Excel(name = "项目名称")
     private String name;
+
+    private String projectId;
 
     @Excel(name = "利润")
     private String pullMoney;/*收益 - 车运 - 渣场*/

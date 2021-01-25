@@ -2,6 +2,9 @@ package com.dregs.project.system.project.controller;
 
 import java.util.List;
 
+import com.dregs.project.system.car.domain.Car;
+import com.dregs.project.system.car.service.ICarService;
+import com.dregs.project.system.project.domain.StaCarProject;
 import com.dregs.project.system.project.domain.StaProject;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,10 +39,16 @@ public class TProjectController extends BaseController
     @Autowired
     private ITProjectService tProjectService;
 
+    @Autowired
+    private ICarService carService;
+
     @RequiresPermissions("system:project:view")
     @GetMapping("/staCarProject")
-    public String staCarProject()
+    public String staCarProject(String projectId,ModelMap mmap)
     {
+        List<Car> cars = carService.selectCarList(new Car());
+        mmap.put("projectId",projectId);
+        mmap.put("cars",cars);
         return prefix + "/staCarProject";
     }
 
@@ -52,7 +61,7 @@ public class TProjectController extends BaseController
     public TableDataInfo staCarlist(StaProject staProject)
     {
         startPage();
-        List<StaProject> list = tProjectService.selectStaCarlist(staProject);
+        List<StaCarProject> list = tProjectService.selectStaCarlist(staProject);
         return getDataTable(list);
     }
 

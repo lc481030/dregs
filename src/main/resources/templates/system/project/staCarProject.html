@@ -2,6 +2,8 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <th:block th:include="include :: header('项目管理列表')" />
+    <th:block th:include="include :: datetimepicker-css" />
+    <th:block th:include="include :: select2-css" />
 </head>
 <body class="gray-bg">
      <div class="container-div">
@@ -11,10 +13,15 @@
                     <div class="select-list">
                         <ul>
                             <li>
-                                <label>carId：</label>
-                                <input type="text" name="name"/>
+                                <label>车辆：</label>
+                                <select name="carId" class="form-control" width="50" >
+                                    <option value="">--请选择--</option>
+                                    <option th:each="car : ${cars}" th:text="${car.carNum+'['+car.driver+']'}" th:value="${car.id}"></option>
+                                </select>
+                                <input th:value="${projectId}" type="hidden" name="projectId"/>
                             </li>
                             <li>
+                                <input type="hidden" name="projectId" />
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
                                 <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
                             </li>
@@ -34,6 +41,8 @@
         </div>
     </div>
     <th:block th:include="include :: footer" />
+     <th:block th:include="include :: datetimepicker-js" />
+     <th:block th:include="include :: select2-js" />
     <script th:inline="javascript">
         var editFlag = [[${@permission.hasPermi('system:project:edit')}]];
         var removeFlag = [[${@permission.hasPermi('system:project:remove')}]];
@@ -41,43 +50,36 @@
 
         $(function() {
             var options = {
-                url: prefix + "/stalist",
-                exportUrl: prefix + "/staexport",
+                url: prefix + "/staCarList",
+                exportUrl: prefix + "/staCarExport",
                 modalName: "项目管理",
-                columns: [{
-                    checkbox: true
+                columns: [
+                {
+                    field: 'projectName',
+                    title: '项目'
                 },
                 {
-                    field: 'name',
-                    title: '项目名称'
+                    field: 'slaName',
+                    title: '渣场'
                 },
                 {
-                    field: 'pullTotalMoney',
-                    title: '收入'
+                    field: 'carNum',
+                    title: '车牌'
                 },
                 {
-                    field: 'pushCarTotalMoney',
-                    title: '车运应付'
+                    field: 'transportNum',
+                    title: '票数'
                 },
                 {
-                    field: 'pushSlaTotalMoney',
-                    title: '渣土应付'
+                    field: 'pushCarMoney',
+                    title: '单价'
                 },
                 {
-                    field: 'pullMoney',
-                    title: '利润'
-                },
-                {
-                    field: 'pushTotal',
-                    title: '发票数量'
-                },
-                {
-                    field: 'carTotal',
-                    title: '车运数量'
-                },
-                {
-                    field: 'slaTotal',
-                    title: '渣场数量'
+                    field: 'totalMoney',
+                    title: '应付'
+                },{
+                    field: 'payMoney',
+                    title: '已付'
                 }]
             };
             $.table.init(options);

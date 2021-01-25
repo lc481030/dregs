@@ -2,6 +2,7 @@ package com.dregs.project.system.project.mapper;
 
 import java.util.List;
 
+import com.dregs.project.system.project.domain.StaCarProject;
 import com.dregs.project.system.project.domain.StaProject;
 import com.dregs.project.system.project.domain.TProject;
 
@@ -63,7 +64,9 @@ public interface TProjectMapper
 
     List<StaProject> selectStaProjectList(StaProject staProject);
 
-    List<StaProject> selectStaCarByProjectId(StaProject staProject);
+    List<StaCarProject> selectStaCarByProjectId(StaProject staProject);
+
+    List<StaCarProject> selectPayCarListByProjectId(StaProject staProject);
 
     List<TProject> selectProjectByPayList();
 

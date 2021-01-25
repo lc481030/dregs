@@ -1,7 +1,10 @@
 package com.dregs.project.system.project.service.impl;
 
 import java.util.List;
+import java.util.Optional;
+
 import com.dregs.common.utils.DateUtils;
+import com.dregs.project.system.project.domain.StaCarProject;
 import com.dregs.project.system.project.domain.StaProject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -98,12 +101,31 @@ public class TProjectServiceImpl implements ITProjectService
 
     @Override
     public List<StaProject> selectStaProjectList(StaProject staProject) {
-        return tProjectMapper.selectStaProjectList(staProject);
+        List<StaProject> list = tProjectMapper.selectStaProjectList(staProject);
+        return list;
     }
 
     @Override
-    public List<StaProject> selectStaCarlist(StaProject staProject) {
-        return tProjectMapper.selectStaCarByProjectId(staProject);
+    public List<StaCarProject> selectStaCarlist(StaProject staProject) {
+        List<StaCarProject> list = tProjectMapper.selectStaCarByProjectId(staProject);
+        List<StaCarProject> list1 = tProjectMapper.selectPayCarListByProjectId(staProject);
+        /*有记录增加付款金额*/
+        list.forEach(staCarProject -> {
+            Optional<StaCarProject> _staCarProject = list1.stream().filter(item->item.getCarId().toString().equals(staCarProject.getCarId().toString())).findFirst();
+            if (_staCarProject.isPresent()){
+                StaCarProject a = _staCarProject.get();
+                staCarProject.setPayMoney(a.getPayMoney());
+            }
+        });
+        /*已付款未运输增加付款记录*/
+        list1.forEach(staCarProject -> {
+            Optional<StaCarProject> _staCarProject = list.stream().filter(item->item.getCarId().toString().equals(staCarProject.getCarId().toString())).findFirst();
+            if (!_staCarProject.isPresent()){
+               list.add(staCarProject);
+            }
+        });
+
+        return list;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.dregs.project.system.project.service;
 
 import java.util.List;
 
+import com.dregs.project.system.project.domain.StaCarProject;
 import com.dregs.project.system.project.domain.StaProject;
 import com.dregs.project.system.project.domain.TProject;
 import com.dregs.project.system.slagyard.domain.Slagyard;
@@ -64,7 +65,7 @@ public interface ITProjectService
 
     List<StaProject> selectStaProjectList(StaProject staProject);
 
-    List<StaProject> selectStaCarlist(StaProject staProject);
+    List<StaCarProject> selectStaCarlist(StaProject staProject);
 
 
     List<TProject> selectProjectByPayList();

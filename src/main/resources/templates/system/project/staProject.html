@@ -84,10 +84,24 @@
                 {
                     field: 'slaTotal',
                     title: '渣场数量'
+                },
+                {
+                    title: '详情',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-danger btn-xs" href="javascript:void(0)" onclick="open1(\'' + row.projectId +'\',\''+row.name+ '\')"><i class="fa fa-edit"></i>车运</a> ');
+                        return actions.join('');
+                    }
                 }]
             };
             $.table.init(options);
         });
+
+        function open1(projectId,title){
+            $.modal.openTab(title, prefix + "/staCarProject?projectId="+projectId);
+        }
+
     </script>
 </body>
 </html>
