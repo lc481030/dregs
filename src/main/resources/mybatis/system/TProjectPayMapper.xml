@@ -19,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTProjectPayVo">
-        select id, create_time, update_time, add_user_id, add_name, upd_user_id, udp_name, pay_type, money, relation_id, type from t_project__pay
+        select id, create_time, update_time, add_user_id, add_name, upd_user_id, udp_name, pay_type, money, relation_id, type from t_project_pay
     </sql>
 
     <select id="selectTProjectPayList" parameterType="TProjectPay" resultMap="TProjectPayResult">
@@ -51,7 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
         
     <insert id="insertTProjectPay" parameterType="TProjectPay" useGeneratedKeys="true" keyProperty="id">
-        insert into t_project__pay
+        insert into t_project_pay
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
@@ -79,7 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 
     <update id="updateTProjectPay" parameterType="TProjectPay">
-        update t_project__pay
+        update t_project_pay
         <trim prefix="SET" suffixOverrides=",">
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
@@ -96,11 +96,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteTProjectPayById" parameterType="Long">
-        delete from t_project__pay where id = #{id}
+        delete from t_project_pay where id = #{id}
     </delete>
 
     <delete id="deleteTProjectPayByIds" parameterType="String">
-        delete from t_project__pay where id in 
+        delete from t_project_pay where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

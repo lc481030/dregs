@@ -62,4 +62,6 @@ public interface TProjectMapper
     public int deleteTProjectByIds(String[] ids);
 
     List<StaProject> selectStaProjectList(StaProject staProject);
+
+    List<StaProject> selectStaCarByProjectId(StaProject staProject);
 }

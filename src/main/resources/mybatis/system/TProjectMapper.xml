@@ -29,6 +29,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
 
+    <select id="selectStaCarByProjectId" parameterType="Long" resultType="com.dregs.project.system.project.domain.StaCarProject">
+        SELECT
+            t.* ,c.car_num
+        FROM
+            t_car_transport AS t,
+            t_project_slagyard AS ps ,t_car as c
+        WHERE
+            t.project_slagyard_id = ps.id AND t.transport_type = 1 AND t.car_id = c.id
+            <if test="projectId != null and projectId != ''">
+                and t.projectId = #{projectId}
+            </if>
+    </select>
+
 
     <select id="selectStaProjectList" parameterType="StaProject" resultType="com.dregs.project.system.project.domain.StaProject">
         SELECT p.name ,sum(money) as pullMoney,sum(pushNum) as pushTotal ,sum(carNum) as carTotal ,sum(slaNum) as slaTotal

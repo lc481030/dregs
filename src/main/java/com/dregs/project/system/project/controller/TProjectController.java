@@ -37,6 +37,40 @@ public class TProjectController extends BaseController
     private ITProjectService tProjectService;
 
     @RequiresPermissions("system:project:view")
+    @GetMapping("/staCarProject")
+    public String staCarProject()
+    {
+        return prefix + "/staCarProject";
+    }
+
+    /**
+     * 查询项目管理统计
+     */
+    @RequiresPermissions("system:project:list")
+    @PostMapping("/staCarList")
+    @ResponseBody
+    public TableDataInfo staCarlist(StaProject staProject)
+    {
+        startPage();
+        List<StaProject> list = tProjectService.selectStaCarlist(staProject);
+        return getDataTable(list);
+    }
+
+    /**
+     * 导出项目管理列表
+     */
+    @RequiresPermissions("system:project:export")
+    @Log(title = "项目管理", businessType = BusinessType.EXPORT)
+    @PostMapping("/staCarExport")
+    @ResponseBody
+    public AjaxResult staCarExport(StaProject staProject)
+    {
+        List<StaProject> list = tProjectService.selectStaProjectList(staProject);
+        ExcelUtil<StaProject> util = new ExcelUtil<StaProject>(StaProject.class);
+        return util.exportExcel(list, "project");
+    }
+
+    @RequiresPermissions("system:project:view")
     @GetMapping("/staProject")
     public String staProject()
     {

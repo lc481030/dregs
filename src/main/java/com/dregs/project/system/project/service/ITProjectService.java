@@ -62,4 +62,6 @@ public interface ITProjectService
     public int deleteTProjectById(Long id);
 
     List<StaProject> selectStaProjectList(StaProject staProject);
+
+    List<StaProject> selectStaCarlist(StaProject staProject);
 }

@@ -6,7 +6,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
- * 项目收支对象 t_project__pay
+ * 项目收支对象 t_project_pay
  * 
  * @author dregs
  * @date 2021-01-20
