@@ -42,6 +42,15 @@
 
                 </div>
             </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">付款方：</label>
+                <div class="col-sm-8">
+                    <select name="payObjId"  class="form-control" width="50" th:field="*{payObjId}">
+                        <option th:each="s : ${payProjectList}" th:sid="${s.id}"  th:name="${s.name}" th:text="${s.name}" th:value="${s.id}"></option>
+                    </select>
+
+                </div>
+            </div>
         </form>
     </div>
     <th:block th:include="include :: footer" />

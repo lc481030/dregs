@@ -87,7 +87,17 @@
                 },
                 {
                     field: 'projectType',
-                    title: '项目类型'
+                    title: '选择收费类型',
+                    formatter: function (value, row, index) {
+                        if (row.projectType==1){
+                            return "按车运付款"
+                        }else if (row.projectType==2){
+                            return "按方量付款";
+                        }else{
+                            return "未知";
+                        }
+
+                    }
                 },
                 {
                     field: 'pullMoney',

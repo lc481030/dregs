@@ -64,6 +64,17 @@ public class TProjectPay extends BaseEntity
     private Long projectId;
     private Long slagyardId;
 
+    private Long payObjId;
+    private String payObjName;
+
+    public String getPayObjName() {
+        return payObjName;
+    }
+
+    public void setPayObjName(String payObjName) {
+        this.payObjName = payObjName;
+    }
+
     public Long getCarId() {
         return carId;
     }
@@ -208,6 +219,14 @@ public class TProjectPay extends BaseEntity
     public String getType()
     {
         return type;
+    }
+
+    public Long getPayObjId() {
+        return payObjId;
+    }
+
+    public void setPayObjId(Long payObjId) {
+        this.payObjId = payObjId;
     }
 
     @Override

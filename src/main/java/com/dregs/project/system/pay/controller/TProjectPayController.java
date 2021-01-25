@@ -67,6 +67,13 @@ public class TProjectPayController extends BaseController {
 
         List<Car> carList =  carService.selectCarList(new Car());
         mmap.put("carList",carList);
+
+        TProject tProject = new TProject();
+        tProject.setId(0L);
+        tProject.setName("甲方付款");
+        listProject.add(tProject);
+        mmap.put("payProjectList",listProject);
+
         return prefix + "/pay";
     }
 
@@ -109,6 +116,15 @@ public class TProjectPayController extends BaseController {
             } else if (tp.getType() != null && tp.getType().equals("2")) {
                 tp.setTypeName("实付");
             }
+            String payObjName;
+            if (tp.getPayObjId()==null || tp.getPayObjId()==0L){
+                payObjName = "甲方付款";
+            }else{
+                TProject t = projectService.selectTProjectById(tp.getPayObjId());
+                payObjName = t.getName();
+            }
+
+            tp.setPayObjName(payObjName);
         }
         return getDataTable(list);
     }
@@ -153,6 +169,15 @@ public class TProjectPayController extends BaseController {
             } else if (tp.getType() != null && tp.getType().equals("2")) {
                 tp.setTypeName("实付");
             }
+            String payObjName;
+            if (tp.getPayObjId()==null || tp.getPayObjId()==0L){
+                payObjName = "甲方付款";
+            }else{
+                TProject t = projectService.selectTProjectById(tp.getPayObjId());
+                payObjName = t.getName();
+            }
+
+            tp.setPayObjName(payObjName);
         }
         ExcelUtil<TProjectPay> util = new ExcelUtil<TProjectPay>(TProjectPay.class);
         return util.exportExcel(list, "pay");
@@ -162,7 +187,13 @@ public class TProjectPayController extends BaseController {
      * 新增项目收支
      */
     @GetMapping("/add")
-    public String add() {
+    public String add(ModelMap mmap) {
+        List<TProject> listProject =  projectService.selectTProjectList(new TProject());
+        TProject tProject = new TProject();
+        tProject.setId(0L);
+        tProject.setName("甲方付款");
+        listProject.add(0,tProject);
+        mmap.put("payProjectList",listProject);
         return prefix + "/add";
     }
 
@@ -189,6 +220,14 @@ public class TProjectPayController extends BaseController {
     public String edit(@PathVariable("id") Long id, ModelMap mmap) {
         TProjectPay tProjectPay = tProjectPayService.selectTProjectPayById(id);
         mmap.put("tProjectPay", tProjectPay);
+
+        List<TProject> listProject =  projectService.selectTProjectList(new TProject());
+        TProject tProject = new TProject();
+        tProject.setId(0L);
+        tProject.setName("甲方付款");
+        listProject.add(0,tProject);
+        mmap.put("payProjectList",listProject);
+
         return prefix + "/edit";
     }
 
