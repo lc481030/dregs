@@ -16,10 +16,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="money"    column="money"    />
         <result property="relationId"    column="relation_id"    />
         <result property="type"    column="type"    />
+        <result property="payObjId"    column="pay_obj_id"    />
     </resultMap>
 
     <sql id="selectTProjectPayVo">
-        select id, create_time, update_time, add_user_id, add_name, upd_user_id, udp_name, pay_type, money, relation_id, type from t_project_pay
+        select id, create_time, pay_obj_id,update_time, add_user_id, add_name, upd_user_id, udp_name, pay_type, money, relation_id, type from t_project_pay
     </sql>
 
     <select id="selectTProjectPayList" parameterType="TProjectPay" resultMap="TProjectPayResult">
@@ -33,6 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="money != null  and money != ''"> and money = #{money}</if>
             <if test="relationId != null "> and relation_id = #{relationId}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="payObjId != null  and payObjId != ''"> and pay_obj_id = #{payObjId}</if>
             <if test="beginTime != null and beginTime!=''"> <![CDATA[ and DATE_FORMAT(create_time,'%Y-%m-%d') >= #{beginTime}]]></if>
             <if test="endTime != null and endTime!=''"> <![CDATA[ and DATE_FORMAT(create_time,'%Y-%m-%d') <= #{endTime}]]></if>
 
@@ -63,6 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="money != null">money,</if>
             <if test="relationId != null">relation_id,</if>
             <if test="type != null">type,</if>
+            <if test="payObjId != null  and payObjId != ''">  pay_obj_id ,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="createTime != null">#{createTime},</if>
@@ -75,6 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="money != null">#{money},</if>
             <if test="relationId != null">#{relationId},</if>
             <if test="type != null">#{type},</if>
+            <if test="payObjId != null  and payObjId != ''"> #{payObjId},</if>
          </trim>
     </insert>
 
@@ -90,6 +94,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="payType != null">pay_type = #{payType},</if>
             <if test="money != null">money = #{money},</if>
             <if test="relationId != null">relation_id = #{relationId},</if>
+            <if test="payObjId != null  and payObjId != ''"> pay_obj_id = #{payObjId}</if>
             <if test="type != null">type = #{type},</if>
         </trim>
         where id = #{id}
