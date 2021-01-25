@@ -1,10 +1,11 @@
 package com.dregs.project.system.project.domain;
 
 import com.dregs.framework.aspectj.lang.annotation.Excel;
+import com.dregs.framework.web.domain.BaseEntity;
 import lombok.Data;
 
 @Data
-public class StaProject {
+public class StaProject extends BaseEntity {
 
     /*项目名称*/
     @Excel(name = "项目名称")

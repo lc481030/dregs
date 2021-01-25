@@ -56,6 +56,19 @@ public class TProjectController extends BaseController
         return getDataTable(list);
     }
 
+    /**
+     * 导出项目管理列表
+     */
+    @RequiresPermissions("system:project:export")
+    @Log(title = "项目管理", businessType = BusinessType.EXPORT)
+    @PostMapping("/staexport")
+    @ResponseBody
+    public AjaxResult staexport(StaProject staProject)
+    {
+        List<StaProject> list = tProjectService.selectStaProjectList(staProject);
+        ExcelUtil<StaProject> util = new ExcelUtil<StaProject>(StaProject.class);
+        return util.exportExcel(list, "project");
+    }
 
     @RequiresPermissions("system:project:view")
     @GetMapping()
