@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('项目管理列表')" />
+    <th:block th:include="include :: datetimepicker-css" />
+    <th:block th:include="include :: select2-css" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>渣场：</label>
+                                <select name="slagyardId" class="form-control" width="50" >
+                                    <option value="">--请选择--</option>
+                                    <option th:each="slagyard : ${slagyards}" th:text="${slagyard.title}" th:value="${slagyard.id}"></option>
+                                </select>
+                                <input th:value="${projectId}" type="hidden" name="projectId"/>
+                            </li>
+                            <li>
+                                <input type="hidden" name="projectId" />
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:project:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+     <th:block th:include="include :: datetimepicker-js" />
+     <th:block th:include="include :: select2-js" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:project:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:project:remove')}]];
+        var prefix = ctx + "system/project";
+
+        $(function() {
+            var options = {
+                url: prefix + "/staSlaList",
+                exportUrl: prefix + "/staCarExport",
+                modalName: "项目管理",
+                columns: [
+                {
+                    field: 'projectName',
+                    title: '项目'
+                },
+                {
+                    field: 'slaName',
+                    title: '渣场'
+                },
+                {
+                    field: 'carNum',
+                    title: '车牌'
+                },
+                {
+                    field: 'transportNum',
+                    title: '票数'
+                },
+                {
+                    field: 'pushCarMoney',
+                    title: '单价'
+                },
+                {
+                    field: 'totalMoney',
+                    title: '应付'
+                },{
+                    field: 'payMoney',
+                    title: '已付'
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

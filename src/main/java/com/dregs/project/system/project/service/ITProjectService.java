@@ -71,4 +71,6 @@ public interface ITProjectService
     List<TProject> selectProjectByPayList();
 
     List<TProject> selectProjectObjByPayList();
+
+    List<StaCarProject> selectStaSlalist(StaProject staProject);
 }

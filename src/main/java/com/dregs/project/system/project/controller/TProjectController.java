@@ -6,6 +6,8 @@ import com.dregs.project.system.car.domain.Car;
 import com.dregs.project.system.car.service.ICarService;
 import com.dregs.project.system.project.domain.StaCarProject;
 import com.dregs.project.system.project.domain.StaProject;
+import com.dregs.project.system.slagyard.domain.Slagyard;
+import com.dregs.project.system.slagyard.service.ISlagyardService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,6 +44,49 @@ public class TProjectController extends BaseController
     @Autowired
     private ICarService carService;
 
+    @Autowired
+    private ISlagyardService selectCarList;
+
+    @RequiresPermissions("system:project:view")
+    @GetMapping("/staSlaProject")
+    public String staSlaProject(String projectId,ModelMap mmap)
+    {
+        List<Slagyard> slagyards = selectCarList.selectSlagyardList(new Slagyard());
+        mmap.put("projectId",projectId);
+        mmap.put("slagyards",slagyards);
+        return prefix + "/staSlaProject";
+    }
+
+    /**
+     * 查询项目管理统计
+     */
+    @RequiresPermissions("system:project:list")
+    @PostMapping("/staSlaList")
+    @ResponseBody
+    public TableDataInfo staSlaList(StaProject staProject)
+    {
+        startPage();
+        List<StaCarProject> list = tProjectService.selectStaSlalist(staProject);
+        return getDataTable(list);
+    }
+
+    /**
+     * 导出项目管理列表
+     */
+    @RequiresPermissions("system:project:export")
+    @Log(title = "项目管理", businessType = BusinessType.EXPORT)
+    @PostMapping("/staSlaExport")
+    @ResponseBody
+    public AjaxResult staSlaExport(StaProject staProject)
+    {
+        List<StaCarProject> list = tProjectService.selectStaSlalist(staProject);
+        ExcelUtil<StaCarProject> util = new ExcelUtil<StaCarProject>(StaCarProject.class);
+        return util.exportExcel(list, "project");
+    }
+
+
+
+
     @RequiresPermissions("system:project:view")
     @GetMapping("/staCarProject")
     public String staCarProject(String projectId,ModelMap mmap)
@@ -74,15 +119,17 @@ public class TProjectController extends BaseController
     @ResponseBody
     public AjaxResult staCarExport(StaProject staProject)
     {
-        List<StaProject> list = tProjectService.selectStaProjectList(staProject);
-        ExcelUtil<StaProject> util = new ExcelUtil<StaProject>(StaProject.class);
+        List<StaCarProject> list = tProjectService.selectStaCarlist(staProject);
+        ExcelUtil<StaCarProject> util = new ExcelUtil<StaCarProject>(StaCarProject.class);
         return util.exportExcel(list, "project");
     }
 
     @RequiresPermissions("system:project:view")
     @GetMapping("/staProject")
-    public String staProject()
+    public String staProject(ModelMap mmap)
     {
+        List<TProject> projects = tProjectService.selectTProjectList(new TProject());
+        mmap.put("projects",projects);
         return prefix + "/staProject";
     }
 

@@ -137,6 +137,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                       END 'slaNum'
               FROM
                   t_car_transport as t,t_project_slagyard as ps WHERE t.project_slagyard_id = ps.id
+                    <if test="projectId != null and projectId != ''"><!-- 开始时间检索 -->
+                        and t.project_id = #{projectId}
+                    </if>
                     <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
                         and date_format(t.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
                     </if>
@@ -184,5 +187,55 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+
+    <select id="selectStaSlaByProjectId" parameterType="Long" resultType="com.dregs.project.system.project.domain.StaCarProject">
+
+        SELECT
+        p.name as projectName,
+        s.title as slaName,
+        t.project_id as projectId,
+        s.title as carNum,
+        SUM( t.transport_num ) AS transportNum,
+        ps.push_slagyard_maoney as pushCarMoney,
+        s.id as slagyardId,
+        ps.push_slagyard_maoney * SUM( t.transport_num ) as totalMoney
+        FROM
+        t_car_transport AS t,
+        t_project_slagyard AS ps,
+        t_project as p,
+        t_slagyard as s
+        WHERE
+        t.project_slagyard_id = ps.id
+        and p.id = t.project_id
+        and s.id = t.slagyard_id
+        AND t.transport_type = 2
+        <if test="projectId != null and projectId != ''">
+            and t.project_id = #{projectId}
+        </if>
+        <if test="slagyardId != null and slagyardId != ''">
+            and t.slagyard_id = #{slagyardId}
+        </if>
+        GROUP BY
+        t.project_slagyard_id
+
+    </select>
+
+    <select id="selectPaySlaListByProjectId" parameterType="Long" resultType="com.dregs.project.system.project.domain.StaCarProject">
+
+        SELECT
+        pp.pay_obj_id, pp.relation_id as slagyardId,c.title as carNum, SUM(pp.money) as payMoney
+        FROM
+        t_project_pay as pp,t_slagyard as c
+        WHERE pp.type = 2 AND pp.pay_type = 2 and c.id = pp.relation_id
+        <if test="projectId != null and projectId != ''">
+            and pp.pay_obj_id = #{projectId}
+        </if>
+        <if test="slagyardId != null and slagyardId != ''">
+            and pp.relation_id = #{slagyardId}
+        </if>
+        GROUP BY pp.pay_obj_id, pp.relation_id
+
+    </select>
 
 </mapper>

@@ -11,6 +11,8 @@ public class StaCarProject extends BaseEntity {
 
     private Long carId;
 
+    private String slagyardId;
+
     /** 车辆主键或者渣场主键 */
     @Excel(name = "车辆/渣场")
     private String carNum;

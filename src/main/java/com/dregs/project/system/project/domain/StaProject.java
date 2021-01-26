@@ -9,6 +9,8 @@ public class StaProject extends BaseEntity {
 
     private String carId;
 
+    private String slagyardId;
+
     /*项目名称*/
     @Excel(name = "项目名称")
     private String name;

@@ -137,4 +137,25 @@ public class TProjectServiceImpl implements ITProjectService
     public List<TProject> selectProjectObjByPayList() {
         return tProjectMapper.selectProjectObjByPayList();
     }
+
+    @Override
+    public List<StaCarProject> selectStaSlalist(StaProject staProject) {
+        List<StaCarProject> list = tProjectMapper.selectStaSlaByProjectId(staProject);
+        List<StaCarProject> list1 = tProjectMapper.selectPaySlaListByProjectId(staProject);
+        list.forEach(staCarProject -> {
+            Optional<StaCarProject> _staCarProject = list1.stream().filter(item->item.getSlagyardId().toString().equals(staCarProject.getSlagyardId().toString())).findFirst();
+            if (_staCarProject.isPresent()){
+                StaCarProject a = _staCarProject.get();
+                staCarProject.setPayMoney(a.getPayMoney());
+            }
+        });
+        /*已付款未运输增加付款记录*/
+        list1.forEach(staCarProject -> {
+            Optional<StaCarProject> _staCarProject = list.stream().filter(item->item.getSlagyardId().toString().equals(staCarProject.getSlagyardId().toString())).findFirst();
+            if (!_staCarProject.isPresent()){
+                list.add(staCarProject);
+            }
+        });
+        return list;
+    }
 }
