@@ -81,4 +81,26 @@ public class JxlsUtils {
         return b ? o1 : o2;
     }
 
+    public static void main(String[] args){
+        // 模板位置，输出流
+//        String templatePath = "E:/template5.xls";
+//        OutputStream os = new FileOutputStream("E:/out5.xls");
+//
+//        List<Student> list = generateData(); //    模拟数据库获取数据
+//        //List<Page> page = DataByPage.byPage(list); // 把获取的数据进行分页转换
+//        List<Page> page = individual(list); // 一页一个人
+//
+//        Map<String, Object> model = new HashMap<String, Object>();
+//        model.put("pages", page);
+//        model.put("sheetNames", getSheetName(page));
+//        model.put("className", "六年三班");
+//        model.put("teacherComment", "已核实");
+//        model.put("directorComment", "已核实");
+//
+//        JxlsUtils.exportExcel(templatePath, os, model);
+//        os.close();
+//        // 删除多出来的sheet
+//        DelSheet.deleteSheet("E:/out5.xls", "template");
+//        System.out.println("完成");
+    }
 }
