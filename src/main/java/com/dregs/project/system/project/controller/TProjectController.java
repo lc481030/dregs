@@ -1,30 +1,31 @@
 package com.dregs.project.system.project.controller;
 
-import java.util.List;
-
+import com.dregs.common.utils.poi.ExcelUtil;
+import com.dregs.framework.aspectj.lang.annotation.Log;
+import com.dregs.framework.aspectj.lang.enums.BusinessType;
+import com.dregs.framework.web.controller.BaseController;
+import com.dregs.framework.web.domain.AjaxResult;
+import com.dregs.framework.web.page.TableDataInfo;
 import com.dregs.project.system.car.domain.Car;
 import com.dregs.project.system.car.service.ICarService;
 import com.dregs.project.system.project.domain.StaCarProject;
 import com.dregs.project.system.project.domain.StaProject;
+import com.dregs.project.system.project.domain.TProject;
+import com.dregs.project.system.project.excel.ProjectExcel;
+import com.dregs.project.system.project.service.ITProjectService;
 import com.dregs.project.system.slagyard.domain.Slagyard;
 import com.dregs.project.system.slagyard.service.ISlagyardService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import com.dregs.framework.aspectj.lang.annotation.Log;
-import com.dregs.framework.aspectj.lang.enums.BusinessType;
-import com.dregs.project.system.project.domain.TProject;
-import com.dregs.project.system.project.service.ITProjectService;
-import com.dregs.framework.web.controller.BaseController;
-import com.dregs.framework.web.domain.AjaxResult;
-import com.dregs.common.utils.poi.ExcelUtil;
-import com.dregs.framework.web.page.TableDataInfo;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 项目管理Controller
@@ -144,6 +145,33 @@ public class TProjectController extends BaseController
         startPage();
         List<StaProject> list = tProjectService.selectStaProjectList(staProject);
         return getDataTable(list);
+    }
+
+    @RequiresPermissions("system:project:allExport")
+    @Log(title = "项目管理", businessType = BusinessType.EXPORT)
+    @GetMapping("/allExport")
+    @ResponseBody
+    public void allExport(HttpServletRequest request, HttpServletResponse response)
+    {
+        try {
+            List<StaProject> projects = tProjectService.selectStaProjectList(new StaProject());
+            Map<String,List<?>> map = new TreeMap<>();
+            map.put("汇总",projects);
+            List<StaCarProject> allList = new ArrayList<>();
+            for (StaProject tp:projects) {
+                StaProject staProject = new StaProject();
+                staProject.setProjectId(tp.getProjectId());
+                List<StaCarProject> list = tProjectService.selectStaCarlist(staProject);
+                allList.addAll(list);
+            }
+            Map<String,List<StaCarProject>>  itemMap =  allList.stream().collect(Collectors.groupingBy(StaCarProject::getCarNum));
+            map.putAll(itemMap);
+
+            ProjectExcel.export(response,map);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     /**

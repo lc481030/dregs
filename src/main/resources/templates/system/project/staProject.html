@@ -38,13 +38,16 @@
                 <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:project:export">
                     <i class="fa fa-download"></i> 导出
                 </a>
+                <a class="btn btn-warning" onclick="allExport()" shiro:hasPermission="system:project:allExport">
+                    <i class="fa fa-download"></i>  全部导出
+                </a>
             </div>
             <div class="col-sm-12 select-table table-striped">
                 <table id="bootstrap-table"></table>
             </div>
         </div>
     </div>
-    <th:block th:include="include :: footer" />
+     <th:block th:include="include :: footer" />
      <th:block th:include="include :: datetimepicker-js" />
      <th:block th:include="include :: select2-js" />
     <script th:inline="javascript">
@@ -114,7 +117,9 @@
         function open2(projectId,title){
             $.modal.openTab(title, prefix + "/staSlaProject?projectId="+projectId);
         }
-
+        function allExport() {
+            window.location = prefix + "/allExport";
+        }
     </script>
 </body>
 </html>
