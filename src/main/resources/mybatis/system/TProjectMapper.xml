@@ -67,7 +67,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 and t.car_id = #{carId}
             </if>
             GROUP BY
-            t.project_slagyard_id
+            t.project_slagyard_id,t.car_id
 
     </select>
 
@@ -217,7 +217,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             and t.slagyard_id = #{slagyardId}
         </if>
         GROUP BY
-        t.project_slagyard_id
+        t.slagyard_id,t.project_slagyard_id
 
     </select>
 
