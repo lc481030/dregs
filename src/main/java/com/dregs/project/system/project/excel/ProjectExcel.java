@@ -72,21 +72,25 @@ public class ProjectExcel {
                             setCarTitle(tr,staCarProject.getCarNum(),sheet1);
                             Row tr2 = sheet1.createRow(1);
                             setCarTitle2(tr2);
-                            Row titleRow = sheet1.createRow(2);
-                            Cell cell = titleRow.createCell(0);
-                            cell.setCellValue(isNull(staCarProject.getProjectName()));
-                            cell = titleRow.createCell(1);
-                            cell.setCellValue(isNull(staCarProject.getSlaName()));
-                            cell = titleRow.createCell(2);
-                            cell.setCellValue(isNull(staCarProject.getCarNum()));
-                            cell = titleRow.createCell(3);
-                            cell.setCellValue(staCarProject.getTransportNum()==null?0:staCarProject.getTransportNum());
-                            cell = titleRow.createCell(4);
-                            cell.setCellValue(isNullZero(staCarProject.getPushCarMoney()));
-                            cell = titleRow.createCell(5);
-                            cell.setCellValue(isNullZero(staCarProject.getTotalMoney()));
-                            cell = titleRow.createCell(6);
-                            cell.setCellValue(isNullZero(staCarProject.getPayMoney()));
+                            int row = 2;
+                            for (int i = 0; i < dataList.size(); i++) {
+                                staCarProject = (StaCarProject)dataList.get(i);
+                                Row titleRow = sheet1.createRow(row++);
+                                Cell cell = titleRow.createCell(0);
+                                cell.setCellValue(isNull(staCarProject.getProjectName()));
+                                cell = titleRow.createCell(1);
+                                cell.setCellValue(isNull(staCarProject.getSlaName()));
+                                cell = titleRow.createCell(2);
+                                cell.setCellValue(isNull(staCarProject.getCarNum()));
+                                cell = titleRow.createCell(3);
+                                cell.setCellValue(staCarProject.getTransportNum() == null ? 0 : staCarProject.getTransportNum());
+                                cell = titleRow.createCell(4);
+                                cell.setCellValue(isNullZero(staCarProject.getPushCarMoney()));
+                                cell = titleRow.createCell(5);
+                                cell.setCellValue(isNullZero(staCarProject.getTotalMoney()));
+                                cell = titleRow.createCell(6);
+                                cell.setCellValue(isNullZero(staCarProject.getPayMoney()));
+                            }
                         }
                     }
                 }
