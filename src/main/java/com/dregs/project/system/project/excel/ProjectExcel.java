@@ -62,19 +62,18 @@ public class ProjectExcel {
                         }
                     }
                     index.getAndIncrement();
-                }else {
+                } else {
                     if (dataList != null && dataList.size() > 0) {
                         //创建标题行
-                        Object d = dataList.get(0);
-                        if (d instanceof StaCarProject){
-                            StaCarProject staCarProject = (StaCarProject)d;
-                            Row tr = sheet1.createRow(0);
-                            setCarTitle(tr,staCarProject.getCarNum(),sheet1);
-                            Row tr2 = sheet1.createRow(1);
-                            setCarTitle2(tr2);
-                            int row = 2;
-                            for (int i = 0; i < dataList.size(); i++) {
-                                staCarProject = (StaCarProject)dataList.get(i);
+                        Row tr = sheet1.createRow(0);
+                        setCarTitle(tr, k, sheet1);
+                        Row tr2 = sheet1.createRow(1);
+                        setCarTitle2(tr2);
+                        int row = 2;
+                        for (int i = 0; i < dataList.size(); i++) {
+                            Object d = dataList.get(i);
+                            if (d instanceof StaCarProject) {
+                                StaCarProject staCarProject = (StaCarProject) dataList.get(i);
                                 Row titleRow = sheet1.createRow(row++);
                                 Cell cell = titleRow.createCell(0);
                                 cell.setCellValue(isNull(staCarProject.getProjectName()));
@@ -93,6 +92,7 @@ public class ProjectExcel {
                             }
                         }
                     }
+
                 }
             });
 
@@ -112,28 +112,30 @@ public class ProjectExcel {
         }
     }
 
-    private static String isNull(String value){
-        if (StringUtils.isNotEmpty(value)){
+    private static String isNull(String value) {
+        if (StringUtils.isNotEmpty(value)) {
             return value;
-        }else{
+        } else {
             return "";
         }
     }
-    private static String isNullZero(String value){
-        if (StringUtils.isNotEmpty(value)){
+
+    private static String isNullZero(String value) {
+        if (StringUtils.isNotEmpty(value)) {
             return value;
-        }else{
+        } else {
             return "0";
         }
     }
 
-    private static void setCarTitle( Row titleRow,String carNum,Sheet sheet){
+    private static void setCarTitle(Row titleRow, String carNum, Sheet sheet) {
         Cell cell = titleRow.createCell(0);
-        cell.setCellValue("车牌号"+carNum);
+        cell.setCellValue("车牌号" + carNum);
         CellRangeAddress region = new CellRangeAddress(0, 0, 0, 1);
         sheet.addMergedRegion(region);
     }
-    private static void setCarTitle2( Row titleRow){
+
+    private static void setCarTitle2(Row titleRow) {
         Cell cell = titleRow.createCell(0);
         cell.setCellValue("项目");
         cell = titleRow.createCell(1);
@@ -150,7 +152,7 @@ public class ProjectExcel {
         cell.setCellValue("已付");
     }
 
-    private static void setTitle( Row titleRow){
+    private static void setTitle(Row titleRow) {
         //创建该行下的每一列，并写入标题数据
         Cell cell = titleRow.createCell(0);
         cell.setCellValue("项目名称");
@@ -174,12 +176,12 @@ public class ProjectExcel {
     private static void setResponseHeader(HttpServletResponse response, String fileName) {
         try {
             try {
-                fileName = new String(fileName.getBytes(),"ISO8859-1");
+                fileName = new String(fileName.getBytes(), "ISO8859-1");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
             response.setContentType("application/octet-stream;charset=UTF-8");
-            response.setHeader("Content-Disposition", "attachment;filename="+ fileName);
+            response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
             response.addHeader("Pargam", "no-cache");
             response.addHeader("Cache-Control", "no-cache");
         } catch (Exception ex) {
