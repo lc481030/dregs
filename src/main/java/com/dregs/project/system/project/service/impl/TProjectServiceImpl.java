@@ -107,6 +107,9 @@ public class TProjectServiceImpl implements ITProjectService
 
     @Override
     public List<StaCarProject> selectStaCarlist(StaProject staProject) {
+
+
+        TProject project = tProjectMapper.selectTProjectById(Long.parseLong(staProject.getProjectId()));
         List<StaCarProject> list = tProjectMapper.selectStaCarByProjectId(staProject);
         List<StaCarProject> list1 = tProjectMapper.selectPayCarListByProjectId(staProject);
         /*有记录增加付款金额*/
@@ -115,15 +118,20 @@ public class TProjectServiceImpl implements ITProjectService
             if (_staCarProject.isPresent()){
                 StaCarProject a = _staCarProject.get();
                 staCarProject.setPayMoney(a.getPayMoney());
+                list1.remove(a);
             }
         });
         /*已付款未运输增加付款记录*/
-        list1.forEach(staCarProject -> {
-            Optional<StaCarProject> _staCarProject = list.stream().filter(item->item.getCarId().toString().equals(staCarProject.getCarId().toString())).findFirst();
-            if (!_staCarProject.isPresent()){
-               list.add(staCarProject);
-            }
-        });
+        if (null != list1 && list1.size()>0){
+            list1.forEach(staCarProject -> {
+                Optional<StaCarProject> _staCarProject = list.stream().filter(item->item.getCarId().toString().equals(staCarProject.getCarId().toString())).findFirst();
+                if (!_staCarProject.isPresent()){
+                    staCarProject.setProjectName(project.getName());
+                    list.add(staCarProject);
+                }
+            });
+        }
+
 
         return list;
     }
@@ -140,6 +148,7 @@ public class TProjectServiceImpl implements ITProjectService
 
     @Override
     public List<StaCarProject> selectStaSlalist(StaProject staProject) {
+        TProject project = tProjectMapper.selectTProjectById(Long.parseLong(staProject.getProjectId()));
         List<StaCarProject> list = tProjectMapper.selectStaSlaByProjectId(staProject);
         List<StaCarProject> list1 = tProjectMapper.selectPaySlaListByProjectId(staProject);
         list.forEach(staCarProject -> {
@@ -147,15 +156,20 @@ public class TProjectServiceImpl implements ITProjectService
             if (_staCarProject.isPresent()){
                 StaCarProject a = _staCarProject.get();
                 staCarProject.setPayMoney(a.getPayMoney());
+                list1.remove(a);
             }
         });
         /*已付款未运输增加付款记录*/
-        list1.forEach(staCarProject -> {
-            Optional<StaCarProject> _staCarProject = list.stream().filter(item->item.getSlagyardId().toString().equals(staCarProject.getSlagyardId().toString())).findFirst();
-            if (!_staCarProject.isPresent()){
-                list.add(staCarProject);
-            }
-        });
+        if(null != list1 && list1.size()>0){
+            list1.forEach(staCarProject -> {
+                Optional<StaCarProject> _staCarProject = list.stream().filter(item->item.getSlagyardId().toString().equals(staCarProject.getSlagyardId().toString())).findFirst();
+                if (!_staCarProject.isPresent()){
+                    staCarProject.setProjectName(project.getName());
+                    list.add(staCarProject);
+                }
+            });
+        }
+
         return list;
     }
 }
