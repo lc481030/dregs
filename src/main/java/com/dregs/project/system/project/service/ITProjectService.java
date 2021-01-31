@@ -6,6 +6,8 @@ import com.dregs.project.system.project.domain.StaCarProject;
 import com.dregs.project.system.project.domain.StaProject;
 import com.dregs.project.system.project.domain.TProject;
 import com.dregs.project.system.slagyard.domain.Slagyard;
+import com.dregs.project.system.sta.controller.domain.CarLogMoney;
+import com.dregs.project.system.sta.controller.domain.StaCarDetailMoney;
 
 /**
  * 项目管理Service接口
@@ -73,4 +75,8 @@ public interface ITProjectService
     List<TProject> selectProjectObjByPayList();
 
     List<StaCarProject> selectStaSlalist(StaProject staProject);
+
+    List<CarLogMoney> getCarMoneyList(CarLogMoney carLogMoney);
+
+    List<StaCarDetailMoney> getCarDetailList(CarLogMoney carLogMoney);
 }

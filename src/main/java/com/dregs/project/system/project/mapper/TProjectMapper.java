@@ -5,6 +5,8 @@ import java.util.List;
 import com.dregs.project.system.project.domain.StaCarProject;
 import com.dregs.project.system.project.domain.StaProject;
 import com.dregs.project.system.project.domain.TProject;
+import com.dregs.project.system.sta.controller.domain.CarLogMoney;
+import com.dregs.project.system.sta.controller.domain.StaCarDetailMoney;
 
 /**
  * 项目管理Mapper接口
@@ -75,4 +77,11 @@ public interface TProjectMapper
     List<StaCarProject> selectStaSlaByProjectId(StaProject staProject);
 
     List<StaCarProject> selectPaySlaListByProjectId(StaProject staProject);
+
+    List<CarLogMoney> getAllCarLogMoney(CarLogMoney carLogMoneyp);
+
+    List<CarLogMoney> getAllCarPayMoney(CarLogMoney carLogMoneyp);
+
+    List<StaCarDetailMoney> getCarDetailList(CarLogMoney carLogMoney);
+    List<StaCarDetailMoney> getCarPayDetailList(CarLogMoney carLogMoney);
 }

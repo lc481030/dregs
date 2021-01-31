@@ -238,4 +238,117 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     </select>
 
+    <select id="getAllCarLogMoney" parameterType="Long" resultType="com.dregs.project.system.sta.controller.domain.CarLogMoney">
+
+        SELECT sta.car_id as carId,sta.car_num as carNum,sum(sta.transportNum) as totalNum , sum(sta.totalMoney) as totalMoney
+            FROM (
+                 SELECT
+                     t.car_id,
+                     c.car_num,
+                     SUM( t.transport_num ) AS transportNum,
+                     ps.push_car_maoney,
+                     ps.push_car_maoney * SUM( t.transport_num ) as totalMoney
+                 FROM
+                     t_car_transport AS t,
+                     t_project_slagyard AS ps,
+                     t_car AS c
+                 WHERE
+                     t.project_slagyard_id = ps.id
+                   AND t.transport_type = 1
+                   AND t.car_id = c.id
+                    <if test="carId != null and carId != ''">
+                        and t.car_id = #{carId}
+                    </if>
+                    <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                        and date_format(t.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+                    </if>
+                    <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                        and date_format(t.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+                    </if>
+                 GROUP BY t.car_id,t.project_slagyard_id
+             ) as sta GROUP BY sta.car_id
+
+    </select>
+
+    <select id="getAllCarPayMoney" parameterType="Long" resultType="com.dregs.project.system.sta.controller.domain.CarLogMoney">
+        SELECT
+            pp.relation_id as carId,c.car_num as carNum, SUM(pp.money) as payMoney,0 as totalNum,0 as totalMonet
+        FROM
+            t_project_pay as pp,t_car as c
+        WHERE pp.type = 2 AND pp.pay_type = 1 and c.id = pp.relation_id
+            <if test="carId != null and carId != ''">
+                and pp.relation_id = #{carId}
+            </if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(pp.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                and date_format(pp.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        GROUP BY  pp.relation_id
+    </select>
+
+
+    <select id="getCarDetailList" resultType="com.dregs.project.system.sta.controller.domain.StaCarDetailMoney">
+        SELECT
+        t.car_id as carId,
+        c.car_num AS carNum,
+        t.project_id as projectId,
+        t.slagyard_id as slagyardId,
+        SUM( t.transport_num ) AS transportNum,
+        ps.push_car_maoney as pushCarMaoney,
+        ps.push_car_maoney * SUM( t.transport_num ) as totalMoney
+        FROM
+        t_car_transport AS t,
+        t_project_slagyard AS ps,
+        t_car AS c
+        WHERE
+        t.project_slagyard_id = ps.id
+        AND t.transport_type = 1
+        AND t.car_id = c.id
+        <if test="carId != null and carId != ''">
+            and t.car_id = #{carId}
+        </if>
+        <if test="projectId != null and projectId != ''">
+            and t.project_id = #{projectId}
+        </if>
+        <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+            and date_format(t.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+        </if>
+        <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+            and date_format(t.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+        </if>
+        GROUP BY t.car_id,t.project_slagyard_id
+        ORDER BY t.car_id
+    </select>
+
+    <select id="getCarPayDetailList" resultType="com.dregs.project.system.sta.controller.domain.StaCarDetailMoney">
+        SELECT
+            pp.relation_id AS carId,
+            pp.pay_obj_id	as projectId,
+            c.car_num AS carNum,
+            SUM( pp.money ) AS payMoney
+            FROM
+            t_project_pay AS pp,
+            t_car AS c
+        WHERE
+            pp.type = 2
+            AND pp.pay_type = 1
+            AND c.id = pp.relation_id
+        <if test="carId != null and carId != ''">
+            and pp.relation_id = #{carId}
+        </if>
+        <if test="projectId != null and projectId != ''">
+            and pp.pay_obj_id = #{projectId}
+        </if>
+        <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+            and date_format(pp.create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+        </if>
+        <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+            and date_format(pp.create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+        </if>
+        GROUP BY pp.relation_id,pp.pay_obj_id
+    </select>
+
+
 </mapper>
