@@ -18,15 +18,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="transportType"    column="transport_type"    />
         <result property="projectSlagyardId"    column="project_slagyard_id"    />
         <result property="slagyardId"    column="slagyard_id"    />
+        <result property="pushDate"    column="push_date"    />
     </resultMap>
 
     <sql id="selectCarTransportVo">
-        select id, create_time, update_time, slagyard_id,add_user_id, add_name, upd_user_id, udp_name, car_id, transport_num, project_id, transport_type, project_slagyard_id from t_car_transport
+        select id, create_time,push_date, update_time, slagyard_id,add_user_id, add_name, upd_user_id, udp_name, car_id, transport_num, project_id, transport_type, project_slagyard_id from t_car_transport
     </sql>
 
     <select id="selectCarTransportList" parameterType="CarTransport" resultMap="CarTransportResult">
         <include refid="selectCarTransportVo"/>
-        <where>  
+        <where>
+            <if test="pushDate != null and pushDate !='' "> and push_date = #{pushDate}</if>
             <if test="addUserId != null and projectId !='' "> and add_user_id = #{addUserId}</if>
             <if test="addName != null  and addName != ''"> and add_name like concat('%', #{addName}, '%')</if>
             <if test="updUserId != null and updUserId !='' "> and upd_user_id = #{updUserId}</if>
@@ -60,6 +62,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="transportType != null">transport_type,</if>
             <if test="projectSlagyardId != null">project_slagyard_id,</if>
             <if test="slagyardId != null">slagyard_id,</if>
+            <if test="pushDate != null and pushDate !='' "> push_date ,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="createTime != null">#{createTime},</if>
@@ -74,6 +77,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="transportType != null">#{transportType},</if>
             <if test="projectSlagyardId != null">#{projectSlagyardId},</if>
             <if test="slagyardId != null">#{slagyardId},</if>
+            <if test="pushDate != null and pushDate !='' "> #{pushDate},</if>
          </trim>
     </insert>
 
@@ -92,6 +96,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="transportType != null">transport_type = #{transportType},</if>
             <if test="projectSlagyardId != null">project_slagyard_id = #{projectSlagyardId},</if>
             <if test="slagyardId != null">slagyard_id = #{slagyardId},</if>
+            <if test="pushDate != null and pushDate !='' "> push_date = #{pushDate},</if>
         </trim>
         where id = #{id}
     </update>

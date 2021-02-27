@@ -4,6 +4,7 @@
     <th:block th:include="include :: header('新增车运')" />
     <th:block th:include="include :: datetimepicker-css" />
     <th:block th:include="include :: select2-css" />
+    <th:block th:include="include :: bootstrap-select-css" />
 </head>
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
@@ -14,35 +15,26 @@
                     <select name="transportType" required class="form-control m-b">
                         <option value="">--请选择--</option>
                         <option value="0">实发票</option>
-                        <option value="1">车运</option>
-                        <option value="2">渣场</option>
+                        <option value="1">车运收</option>
+                        <option value="2">渣场收</option>
                     </select>
                 </div>
             </div>
-            <div class="form-group" id="carType">
-                <label class="col-sm-3 control-label">车辆：</label>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">日期：</label>
                 <div class="col-sm-8">
-                    <select name="relationSelect" class="form-control" width="50" >
-                        <option value="">--请选择--</option>
-                        <option th:each="car : ${cars}" th:text="${car.carNum+'['+car.driver+']'}" th:value="${car.id}"></option>
-                    </select>
+                    <div class="input-group date">
+                        <input name="pushDate" class="form-control" required placeholder="yyyy-MM-dd" type="text">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
                 </div>
             </div>
-            <input name="carId" value="" type="hidden" >
-<!--            <div class="form-group" id="staType" style="display: none">-->
-<!--                <label class="col-sm-3 control-label">渣场：</label>-->
-<!--                <div class="col-sm-8">-->
-<!--                    <select name="relationSelect" class="form-control" width="50" >-->
-<!--                        <option value="">&#45;&#45;请选择&#45;&#45;</option>-->
-<!--                        <option th:each="slagyard : ${slagyards}" th:text="${slagyard.title}" th:value="${slagyard.id}"></option>-->
-<!--                    </select>-->
-<!--                </div>-->
-<!--            </div>-->
 
             <div class="form-group">
                 <label class="col-sm-3 control-label">项目渣场：</label>
                 <div class="col-sm-8">
-                    <select name="projectSlagyardId" class="form-control" width="50" >
+                    <select name="projectSlagyardId" required class="form-control" width="50" >
                         <option>--请选择--</option>
                         <option th:each="p : ${list}" th:text="${p.projectName+'——'+p.slagyardName+''}" th:value="${p.id}"></option>
                     </select>
@@ -52,7 +44,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">运输车数：</label>
                 <div class="col-sm-8">
-                    <input name="transportNum" class="form-control" type="text">
+                    <input name="transportNum" required class="form-control" type="text">
                 </div>
             </div>
         </form>
@@ -72,28 +64,10 @@
             }
         }
 
-        $("select[name='relationSelect']").on("change",function () {
-            console.log(":"+this.value)
-            $("input[name='carId']").val(this.value);
-        });
-
-        $("select[name='transportType']").on("change",function () {
-            var transportType =this.value;
-            console.log("transportType:"+transportType)
-            if (transportType == 1){
-                $("#carType").show();
-                $("select[name='relationSelect']").option[1].selected = true;//设置option第1个元素
-                // $("#staType").hide();
-
-            }else if (transportType == 2){
-                // $("#staType").show();
-                $("#carType").hide();
-                $("input[name='carId']").val('');
-            }else if (transportType == 0){
-                // $("#staType").show();
-                $("#carType").hide();
-                $("input[name='carId']").val('');
-            }
+        $("input[name='pushDate']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
         });
 
     </script>

@@ -10,20 +10,23 @@
         <form class="form-horizontal m" id="form-transport-edit" th:object="${carTransport}">
             <input name="id" th:field="*{id}" type="hidden">
             <input name="id" th:field="*{transportType}" type="hidden">
-            <div class="form-group" id="carType">
-                <label class="col-sm-3 control-label">车辆：</label>
-                <div class="col-sm-8">
-                    <select name="relationSelect" class="form-control" th:field="*{carId}"  width="50" >
-                        <option th:each="car : ${cars}" th:text="${car.carNum+'['+car.driver+']'}" th:value="${car.id}"></option>
-                    </select>
-                </div>
-            </div>
+
             <div class="form-group">
                 <label class="col-sm-3 control-label">项目渣场：</label>
                 <div class="col-sm-8">
-                    <select name="projectSlagyardId" class="form-control" width="50" >
+                    <select name="projectSlagyardId" required class="form-control" width="50" >
                         <option th:each="p : ${list}" th:text="${p.projectName+'—到—'+p.slagyardName+''}" th:value="${p.id}"></option>
                     </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">日期：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input name="pushDate" th:value="${#dates.format(pushDate, 'yyyy-MM-dd')}" class="form-control" placeholder="yyyy-MM-dd" type="text">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
                 </div>
             </div>
 
@@ -49,6 +52,12 @@
                 $.operate.save(prefix + "/edit", $('#form-transport-edit').serialize());
             }
         }
+
+        $("input[name='pushDate']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
     </script>
 </body>
 </html>

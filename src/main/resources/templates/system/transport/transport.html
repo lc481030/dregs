@@ -37,14 +37,6 @@
                                 </select>
                             </li>
                             <li>
-                                <label>车辆：</label>
-                                <select name="carId" class="form-control" width="50">
-                                    <option value="">选择车辆</option>
-                                    <option th:each="s : ${cars}" th:sid="${s.id}" th:text="${s.carNum+'['+s.driver+']'}" th:value="${s.id}"></option>
-                                </select>
-                            </li>
-
-                            <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
                                 <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
                             </li>
@@ -101,9 +93,9 @@
                     title: '类型',
                     formatter: function(value, row, index) {
                         if(row.transportType==1){
-                            return '车运'
+                            return '车运收'
                         }else if(row.transportType==2){
-                            return '渣场'
+                            return '渣场收'
                         }else if(row.transportType==0){
                             return '实发票'
                         }else{
@@ -112,12 +104,8 @@
                     }
                 },
                 {
-                    field: 'relationName',
-                    title: '车辆/渣场'
-                },
-                {
                     field: 'transportNum',
-                    title: '运输车数'
+                    title: '票（数量）'
                 },
 
                 {

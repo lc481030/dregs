@@ -84,9 +84,9 @@ public class CarTransportServiceImpl implements ICarTransportService
             }
 
             if (carTransp.getTransportType().toString().equals("1")){
-                Optional<Car> _car = cars.stream().filter(item->item.getId().toString().equals(carTransp.getCarId().toString())).findFirst();
-                Car c = _car.get();
-                carTransp.setRelationName(c.getCarNum()+"["+c.getDriver()+"]");
+//                Optional<Car> _car = cars.stream().filter(item->item.getId().toString().equals(carTransp.getCarId().toString())).findFirst();
+//                Car c = _car.get();
+//                carTransp.setRelationName(c.getCarNum()+"["+c.getDriver()+"]");
             }else if (carTransp.getTransportType().toString().equals("2")){
                 Optional<Slagyard> _slagyard = slagyards.stream().filter(item->item.getId().toString().equals(carTransp.getSlagyardId().toString())).findFirst();
                 Slagyard c = _slagyard.get();

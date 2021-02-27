@@ -2,7 +2,10 @@ package com.dregs.project.system.transport.domain;
 
 import com.dregs.framework.aspectj.lang.annotation.Excel;
 import com.dregs.framework.web.domain.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+
+import java.util.Date;
 
 /**
  * 车运对象 t_car_transport
@@ -68,6 +71,9 @@ public class CarTransport extends BaseEntity
 
     /** 渣场ID */
     private String slagyardId;
+
+    /** 发票时间 */
+    private String pushDate;
 
     @Excel(name = "支出单价")
     private String money;
