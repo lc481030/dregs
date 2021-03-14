@@ -53,7 +53,7 @@ public class CarTransport extends BaseEntity
 
     /** 类型1车运2渣场 */
 //    @Excel(name = "类型1车运2渣场")
-    private Long transportType;
+    private String transportType;
 
     /** 项目渣场关系表ID */
 //    @Excel(name = "项目渣场关系表ID")

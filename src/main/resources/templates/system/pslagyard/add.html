@@ -11,7 +11,7 @@
             <div class="form-group">    
                 <label class="col-sm-3 control-label">项目：</label>
                 <div class="col-sm-8">
-                    <select name="projectSelect" id="projectSelect" class="form-control" width="50">
+                    <select name="projectSelect" id="projectSelect" required class="form-control" width="50">
                         <option value="">选择项目</option>
                         <option th:each="s : ${projectList}" th:sid="${s.id}"  th:name="${s.name}" th:text="${s.name}" th:value="${s.id}"></option>
                     </select>
@@ -21,7 +21,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">收费类型：</label>
                 <div class="col-sm-8">
-                    <select name="projectType" id="projectType" class="form-control" width="50">
+                    <select name="projectType" id="projectType" required class="form-control" width="50">
                         <option value="">选择收费类型</option>
                         <option value="1">按车运付款</option>
                         <option value="2">按方量付款</option>
@@ -32,25 +32,25 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">收益单价：</label>
                 <div class="col-sm-8">
-                    <input name="pullMoney" class="form-control" type="text">
+                    <input name="pullMoney" class="form-control" type="number" required>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">车运价格：</label>
                 <div class="col-sm-8">
-                    <input name="pushCarMaoney" class="form-control" type="text">
+                    <input name="pushCarMaoney" class="form-control" type="number" required>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-3 control-label">渣场价格：</label>
                 <div class="col-sm-8">
-                    <input name="pushSlagyardMaoney" class="form-control" type="text">
+                    <input name="pushSlagyardMaoney" class="form-control" type="number" required>
                 </div>
             </div>
             <div class="form-group">    
                 <label class="col-sm-3 control-label">渣场ID：</label>
                 <div class="col-sm-8">
-                    <select name="slagyardSelect" id="slagyardSelect" class="form-control" width="50">
+                    <select name="slagyardSelect" id="slagyardSelect" required class="form-control" width="50">
                         <option value="">选择渣场</option>
                         <option th:each="s : ${slagyardList}" th:sid="${s.id}" th:text="${s.title}" th:value="${s.id}"></option>
                     </select>

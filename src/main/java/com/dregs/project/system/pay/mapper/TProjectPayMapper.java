@@ -58,4 +58,6 @@ public interface TProjectPayMapper
      * @return 结果
      */
     public int deleteTProjectPayByIds(String[] ids);
+
+    String getMoneyByObjectId(TProjectPay tProjectPay);
 }

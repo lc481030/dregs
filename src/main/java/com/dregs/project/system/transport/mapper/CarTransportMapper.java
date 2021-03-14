@@ -58,4 +58,6 @@ public interface CarTransportMapper
      * @return 结果
      */
     public int deleteCarTransportByIds(String[] ids);
+
+    Integer getTransportNumByProjectSlagyardId(CarTransport carTransport);
 }

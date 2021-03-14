@@ -1,5 +1,6 @@
 package com.dregs.project.system.project.controller;
 
+import com.dregs.common.utils.StringUtils;
 import com.dregs.common.utils.poi.ExcelUtil;
 import com.dregs.framework.aspectj.lang.annotation.Log;
 import com.dregs.framework.aspectj.lang.enums.BusinessType;
@@ -16,6 +17,7 @@ import com.dregs.project.system.project.service.ITProjectService;
 import com.dregs.project.system.slagyard.domain.Slagyard;
 import com.dregs.project.system.slagyard.service.ISlagyardService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -144,7 +146,17 @@ public class TProjectController extends BaseController
     {
         startPage();
         List<StaProject> list = tProjectService.selectStaProjectList(staProject);
-        return getDataTable(list);
+
+        TProject project = new TProject();
+        BeanUtils.copyProperties(staProject,project);
+        if (StringUtils.isNotEmpty(staProject.getProjectId())){
+            project.setId(Long.parseLong(staProject.getProjectId()));
+        }
+        List<TProject> projects = tProjectService.selectTProjectList(project);
+        long total = getDataTable(projects).getTotal();
+        TableDataInfo res =  getDataTable(list);
+        res.setTotal(total);
+        return res;
     }
 
     @RequiresPermissions("system:project:allExport")

@@ -15,7 +15,7 @@
                 <label class="col-sm-3 control-label">项目渣场：</label>
                 <div class="col-sm-8">
                     <select name="projectSlagyardId" class="form-control" width="50" >
-                        <option th:each="p : ${list}" th:text="${p.projectName+'—到—'+p.slagyardName+''}" th:value="${p.id}"></option>
+                        <option th:each="p : ${list}" th:text="${p.projectName+'—到—'+p.slagyardName+''}" th:value="${p.id}" th:field="*{projectSlagyardId}"></option>
                     </select>
                 </div>
             </div>
@@ -31,7 +31,7 @@
             </div>
 
             <div class="form-group">
-                <label class="col-sm-3 control-label">运输车数：</label>
+                <label class="col-sm-3 control-label">方量数：</label>
                 <div class="col-sm-8">
                     <input name="transportNum" th:field="*{transportNum}" class="form-control" type="text">
                 </div>

@@ -98,6 +98,38 @@ public class CarTransportController extends BaseController
     /**
      * 新增车运
      */
+    @GetMapping("/addfang")
+    public String addFang(ModelMap mmap)
+    {
+        TProjectSlagyard projectSlagyard = new TProjectSlagyard();
+        projectSlagyard.setProjectType("2");
+        List<TProjectSlagyard> list = tProjectSlagyardService.selectTProjectSlagyardList(projectSlagyard);
+        for (TProjectSlagyard ts:list){
+            TProject project = projectService.selectTProjectById(Long.parseLong(ts.getProjectId()));
+            if (project!=null){
+                ts.setProjectName(project.getName());
+            }
+            Slagyard s = slagyardService.selectSlagyardById(ts.getSlagyardId());
+            if(s!=null){
+                ts.setSlagyardName(s.getTitle());
+            }
+
+        }
+
+        Car car = new Car();
+        List<Car> cars = carService.selectCarList(car);
+        Slagyard slagyard = new Slagyard();
+        List<Slagyard> slagyards = slagyardService.selectSlagyardList(slagyard);
+        mmap.put("cars",cars);
+        mmap.put("slagyards",slagyards);
+        mmap.put("list",list);
+        return prefix + "/addfang";
+    }
+
+
+    /**
+     * 新增车运
+     */
     @GetMapping("/add")
     public String add(ModelMap mmap)
     {
@@ -145,6 +177,11 @@ public class CarTransportController extends BaseController
         CarTransport carTransport = carTransportService.selectCarTransportById(id);
         mmap.put("carTransport", carTransport);
         TProjectSlagyard projectSlagyard = new TProjectSlagyard();
+        if (carTransport.getTransportType().toString().equals("3")){
+            projectSlagyard.setProjectType("2");
+        }else{
+            projectSlagyard.setProjectType("1");
+        }
         List<TProjectSlagyard> list = tProjectSlagyardService.selectTProjectSlagyardList(projectSlagyard);
         for (TProjectSlagyard ts:list){
             Slagyard s = slagyardService.selectSlagyardById(ts.getSlagyardId());
@@ -164,10 +201,10 @@ public class CarTransportController extends BaseController
         mmap.put("cars",cars);
         mmap.put("slagyards",slagyards);
         mmap.put("list",list);
-        if(carTransport.getTransportType().toString().equals("1")){
+        if(!carTransport.getTransportType().toString().equals("3")){
             return prefix + "/edit";
         }else{
-            return prefix + "/edit1";
+            return prefix + "/editfang";
         }
     }
 

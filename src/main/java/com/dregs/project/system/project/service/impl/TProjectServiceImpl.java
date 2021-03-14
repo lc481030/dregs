@@ -1,16 +1,25 @@
 package com.dregs.project.system.project.service.impl;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.dregs.common.utils.DateUtils;
+import com.dregs.common.utils.StringUtils;
+import com.dregs.project.system.pay.domain.TProjectPay;
+import com.dregs.project.system.pay.mapper.TProjectPayMapper;
 import com.dregs.project.system.project.domain.StaCarProject;
 import com.dregs.project.system.project.domain.StaProject;
 import com.dregs.project.system.slagyard.domain.Slagyard;
+import com.dregs.project.system.slagyard.domain.TProjectSlagyard;
 import com.dregs.project.system.slagyard.mapper.SlagyardMapper;
+import com.dregs.project.system.slagyard.mapper.TProjectSlagyardMapper;
 import com.dregs.project.system.sta.controller.domain.CarLogMoney;
 import com.dregs.project.system.sta.controller.domain.StaCarDetailMoney;
+import com.dregs.project.system.transport.domain.CarTransport;
+import com.dregs.project.system.transport.mapper.CarTransportMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.dregs.project.system.project.mapper.TProjectMapper;
@@ -32,6 +41,15 @@ public class TProjectServiceImpl implements ITProjectService
 
     @Autowired
     private SlagyardMapper slagyardMapper;
+
+    @Autowired
+    private CarTransportMapper carTransportMapper;
+
+    @Autowired
+    private TProjectSlagyardMapper tProjectSlagyardMapper;
+
+    @Autowired
+    private TProjectPayMapper projectPayMapper;
 
 
     /**
@@ -110,8 +128,80 @@ public class TProjectServiceImpl implements ITProjectService
 
     @Override
     public List<StaProject> selectStaProjectList(StaProject staProject) {
-        List<StaProject> list = tProjectMapper.selectStaProjectList(staProject);
-        return list;
+        //查询项目列表
+        TProject project = new TProject();
+        if (StringUtils.isNotEmpty(staProject.getProjectId())){
+            project.setId(Long.parseLong(staProject.getProjectId()));
+        }
+        List<TProject> projects = tProjectMapper.selectTProjectList(project);
+
+        List<StaProject> _list = new ArrayList<>();
+        projects.forEach(tProject -> {
+            //查询项目下的所有项目渣场对应关系
+            TProjectSlagyard projectSlagyard = new TProjectSlagyard();
+            projectSlagyard.setProjectId(tProject.getId()+"");
+            List<TProjectSlagyard> list = tProjectSlagyardMapper.selectTProjectSlagyardList(projectSlagyard);
+            //通过车运查询项目应收，应付，剩余等信息 (条件车运渣场关系ID)
+            Integer staMoney = 0;
+            Integer carMoney = 0;
+            Integer pullTotalMoney = 0;
+
+            Integer staTotalNum = 0;
+            Integer carTotalNum = 0;
+            Integer pullTotalNum = 0;
+            for (TProjectSlagyard tProjectSlagyard:list) {
+                CarTransport carTransport = new CarTransport();
+                /*copy 对象，主要是查询时间*/
+                BeanUtils.copyProperties(staProject,carTransport);
+                carTransport.setProjectSlagyardId(tProjectSlagyard.getId());
+                if (tProjectSlagyard.getProjectType().equals("1")){
+                    carTransport.setTransportType("0");
+                }else{
+                    carTransport.setTransportType("3");
+                }
+                /*发了多少车，或者收了多少方量*/
+                Integer pulLNum = carTransportMapper.getTransportNumByProjectSlagyardId(carTransport);
+                Integer pullMoney = Integer.parseInt(tProjectSlagyard.getPullMoney());
+                pullTotalMoney += (pulLNum* pullMoney);
+                pullTotalNum = pullTotalNum +pulLNum;
+
+                carTransport.setTransportType("1");
+                Integer carNum = carTransportMapper.getTransportNumByProjectSlagyardId(carTransport);
+                Integer pushCarMaoney = Integer.parseInt(tProjectSlagyard.getPushCarMaoney());
+                carMoney += (pushCarMaoney * carNum);
+                carTotalNum = carTotalNum + carNum;
+
+                carTransport.setTransportType("2");
+                Integer staNum = carTransportMapper.getTransportNumByProjectSlagyardId(carTransport);
+                Integer pushSlagyardMoney = Integer.parseInt(tProjectSlagyard.getPushSlagyardMaoney());
+                staMoney += (pushSlagyardMoney * staNum);
+                staTotalNum = staTotalNum + staNum;
+            }
+            //查询项目已付金额
+            TProjectPay tProjectPay = new TProjectPay();
+            tProjectPay.setRelationId(project.getId());
+            tProjectPay.setType("1");
+            /*已收*/
+            String getEndMoney = projectPayMapper.getMoneyByObjectId(tProjectPay);
+
+            /*已付*/
+            tProjectPay.setRelationId(null);
+            tProjectPay.setPayObjId(project.getId());
+            String pullEndMoney = projectPayMapper.getMoneyByObjectId(tProjectPay);
+
+            StaProject _staProject = new StaProject();
+            _staProject.setPullMoney((pullTotalMoney - carMoney - staMoney)+"");
+            _staProject.setPullTotalMoney(pullTotalMoney+"");
+            _staProject.setPushCarTotalMoney(carMoney+"");
+            _staProject.setPushSlaTotalMoney(staMoney+"");
+            _staProject.setName(tProject.getName());
+            _staProject.setPushTotal(pullTotalNum.toString());
+            _staProject.setCarTotal(carTotalNum.toString());
+            _staProject.setSlaTotal(staTotalNum.toString());
+            _staProject.setProjectId(tProject.getId().toString());
+            _list.add(_staProject);
+        });
+        return _list;
     }
 
     @Override
@@ -174,6 +264,7 @@ public class TProjectServiceImpl implements ITProjectService
                 Optional<StaCarProject> _staCarProject = list.stream().filter(item->item.getSlagyardId().toString().equals(staCarProject.getSlagyardId().toString())).findFirst();
                 if (!_staCarProject.isPresent()){
                     staCarProject.setProjectName(project.getName());
+                    staCarProject.setSlaName(staCarProject.getCarNum());
                     list.add(staCarProject);
                 }
             });

@@ -83,7 +83,7 @@ public class CarTransportServiceImpl implements ICarTransportService
                 carTransp.setProjectName(_project.get().getName());
             }
 
-            if (carTransp.getTransportType().toString().equals("1")){
+            if (carTransp.getTransportType().toString().equals("1") || carTransp.getTransportType().toString().equals("3")){
 //                Optional<Car> _car = cars.stream().filter(item->item.getId().toString().equals(carTransp.getCarId().toString())).findFirst();
 //                Car c = _car.get();
 //                carTransp.setRelationName(c.getCarNum()+"["+c.getDriver()+"]");
@@ -105,7 +105,7 @@ public class CarTransportServiceImpl implements ICarTransportService
 
                 TProjectSlagyard tProjectSlagyard = option.get();
 
-                if (carTransp.getTransportType().toString().equals("1")){
+                if (carTransp.getTransportType().toString().equals("1") || carTransp.getTransportType().toString().equals("3")){
                     carTransp.setTotalMoney((carTransp.getTransportNum() * Long.parseLong(tProjectSlagyard.getPushCarMaoney()))+"");
                     carTransp.setMoney(tProjectSlagyard.getPushCarMaoney());
                 }else if (carTransp.getTransportType().toString().equals("2")){

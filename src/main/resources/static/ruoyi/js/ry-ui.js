@@ -41,7 +41,7 @@ var table = {
                     method: 'post',
                     height: undefined,
                     sidePagination: "server",
-                    sortName: undefined,
+                    sortName: "id",
                     sortOrder: "desc",
                     pagination: true,
                     paginationLoop: false,

@@ -47,7 +47,10 @@
 
             <div class="btn-group-sm" id="toolbar" role="group">
                 <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:transport:add">
-                    <i class="fa fa-plus"></i> 添加
+                    <i class="fa fa-plus"></i> 添加车运
+                </a>
+                <a class="btn btn-success" onclick="addFang()">
+                    <i class="fa fa-plus"></i> 添加方量
                 </a>
                 <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:transport:edit">
                     <i class="fa fa-edit"></i> 修改
@@ -98,6 +101,8 @@
                             return '渣场收'
                         }else if(row.transportType==0){
                             return '实发票'
+                        }else if(row.transportType==3){
+                            return '方量'
                         }else{
                             return '错误'
                         }
@@ -145,6 +150,12 @@
             };
             $.table.init(options);
         });
+
+        function addFang() {
+            table.set();
+            var url = prefix+"/addfang";
+            $.modal.open("添加方量", url);
+        }
     </script>
 </body>
 </html>

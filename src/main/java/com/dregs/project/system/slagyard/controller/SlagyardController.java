@@ -1,19 +1,27 @@
 package com.dregs.project.system.slagyard.controller;
 
+import com.dregs.common.utils.StringUtils;
 import com.dregs.common.utils.poi.ExcelUtil;
 import com.dregs.framework.aspectj.lang.annotation.Log;
 import com.dregs.framework.aspectj.lang.enums.BusinessType;
 import com.dregs.framework.web.controller.BaseController;
 import com.dregs.framework.web.domain.AjaxResult;
 import com.dregs.framework.web.page.TableDataInfo;
+import com.dregs.project.system.project.domain.SlagYardStatistics;
+import com.dregs.project.system.project.domain.SlagYardStatisticsProject;
+import com.dregs.project.system.project.domain.StaProject;
+import com.dregs.project.system.project.domain.TProject;
+import com.dregs.project.system.project.service.ITProjectService;
 import com.dregs.project.system.slagyard.domain.Slagyard;
 import com.dregs.project.system.slagyard.service.ISlagyardService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,6 +38,10 @@ public class SlagyardController extends BaseController
 
     @Autowired
     private ISlagyardService slagyardService;
+
+
+    @Autowired
+    private ITProjectService tProjectService;
 
     @RequiresPermissions("system:slagyard:view")
     @GetMapping()
@@ -119,5 +131,73 @@ public class SlagyardController extends BaseController
     public AjaxResult remove(String ids)
     {
         return toAjax(slagyardService.deleteSlagyardByIds(ids));
+    }
+
+    @GetMapping("/slagYardStatistics")
+    public String slagYardStatistics(ModelMap mmap){
+        List<Slagyard> list = slagyardService.selectSlagyardList(new Slagyard());
+        mmap.put("slagyards",list);
+        return "system/project/slagYardStatistics";
+    }
+
+    @PostMapping("/slagYardStatisticsList")
+    @ResponseBody
+    public TableDataInfo slagYardStatisticsList(SlagYardStatistics slagYardStatistics){
+        startPage();
+        List<SlagYardStatistics> list = slagyardService.slagYardStatistics(slagYardStatistics);
+        TableDataInfo tableDataInfo = getDataTable(list);
+
+        Slagyard _slagyard = new Slagyard();
+        BeanUtils.copyProperties(slagYardStatistics,_slagyard);
+        if (StringUtils.isNotEmpty(slagYardStatistics.getSlagyardId())){
+            _slagyard.setId(Long.parseLong(slagYardStatistics.getSlagyardId()));
+        }
+
+        List<Slagyard> _list = slagyardService.selectSlagyardList(_slagyard);
+        TableDataInfo _tableDataInfo = getDataTable(_list);
+        tableDataInfo.setTotal(_tableDataInfo.getTotal());
+        return tableDataInfo;
+    }
+
+
+    /**
+     * 导出渣场列表
+     */
+    @Log(title = "渣场", businessType = BusinessType.EXPORT)
+    @PostMapping("/slagYardStatisticsListexport")
+    @ResponseBody
+    public AjaxResult slagYardStatisticsListexport(SlagYardStatistics slagYardStatistics)
+    {
+        List<SlagYardStatistics> list = slagyardService.slagYardStatistics(slagYardStatistics);
+        ExcelUtil<SlagYardStatistics> util = new ExcelUtil<SlagYardStatistics>(SlagYardStatistics.class);
+        return util.exportExcel(list, "渣场统计");
+    }
+
+    @GetMapping("/slagYardProjectStatistics")
+    public String slagYardProjectStatistics(ModelMap mmap,String slagyardId){
+        List<TProject> list = tProjectService.selectTProjectList(new TProject());
+        mmap.put("projects",list);
+        mmap.put("slagyardId",slagyardId);
+        return "system/project/slagYardProjectStatistics";
+    }
+
+    @Log(title = "渣场统计导出", businessType = BusinessType.EXPORT)
+    @PostMapping("/slagYardProjectStatisticsList")
+    @ResponseBody
+    public TableDataInfo slagYardProjectStatisticsList(SlagYardStatisticsProject slagYardStatisticsProject){
+        List<SlagYardStatisticsProject> list = slagyardService.slagYardStatisticsProject(slagYardStatisticsProject);
+        TableDataInfo tableDataInfo = getDataTable(list);
+        return tableDataInfo;
+    }
+
+
+    @Log(title = "渣场项目统计导出", businessType = BusinessType.EXPORT)
+    @PostMapping("/slagYardProjectStatisticsListexport")
+    @ResponseBody
+    public AjaxResult slagYardProjectStatisticsListexport(SlagYardStatisticsProject slagYardStatisticsProject)
+    {
+        List<SlagYardStatisticsProject> list = slagyardService.slagYardStatisticsProject(slagYardStatisticsProject);
+        ExcelUtil<SlagYardStatisticsProject> util = new ExcelUtil<SlagYardStatisticsProject>(SlagYardStatisticsProject.class);
+        return util.exportExcel(list, "渣场项目统计");
     }
 }

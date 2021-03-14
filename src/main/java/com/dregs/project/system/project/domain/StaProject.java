@@ -38,4 +38,10 @@ public class StaProject extends BaseEntity {
     @Excel(name = "渣场数量")
     private String  slaTotal;
 
+    @Excel(name = "已付")
+    private String  pullEndMoney;
+
+    @Excel(name = "已收")
+    private String  getEndMoney;
+
 }

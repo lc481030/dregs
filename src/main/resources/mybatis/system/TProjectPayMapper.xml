@@ -111,4 +111,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
+    <select id="getMoneyByObjectId" parameterType="TProjectPay" resultType="java.lang.String">
+        select IFNULL(sum(money),0 ) from t_project_pay
+        where
+              type = #{type}
+        <if test="relationId != null and relationId!='' ">
+            and relation_id = #{relationId}
+        </if>
+        <if test="payObjId != null and payObjId!='' ">
+            and pay_obj_id = #{payObjId}
+        </if>
+        <if test="payType != null and payType!='' ">
+            and pay_type = #{payType}
+        </if>
+        <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+            and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+        </if>
+        <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+            and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+        </if>
+    </select>
+
+
 </mapper>

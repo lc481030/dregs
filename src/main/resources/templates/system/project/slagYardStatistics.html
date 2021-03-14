@@ -14,10 +14,10 @@
                     <div class="select-list">
                         <ul>
                             <li>
-                                <label>项目名称：</label>
-                                <select name="projectId" class="form-control" width="50">
-                                    <option value="">选择项目</option>
-                                    <option th:each="s : ${projects}" th:sid="${s.id}"  th:name="${s.name}" th:text="${s.name}" th:value="${s.id}"></option>
+                                <label>渣场名称：</label>
+                                <select name="slagyardId" class="form-control" width="50">
+                                    <option value="">选择渣场</option>
+                                    <option th:each="s : ${slagyards}" th:sid="${s.id}"  th:name="${s.title}" th:text="${s.title}" th:value="${s.id}"></option>
                                 </select>
                             </li>
                             <li class="select-time">
@@ -39,9 +39,6 @@
                 <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:project:export">
                     <i class="fa fa-download"></i> 导出
                 </a>
-                <a class="btn btn-warning" onclick="allExport()" shiro:hasPermission="system:project:allExport">
-                    <i class="fa fa-download"></i>  全部导出
-                </a>
             </div>
             <div class="col-sm-12 select-table table-striped">
                 <table id="bootstrap-table"></table>
@@ -54,62 +51,38 @@
     <script th:inline="javascript">
         var editFlag = [[${@permission.hasPermi('system:project:edit')}]];
         var removeFlag = [[${@permission.hasPermi('system:project:remove')}]];
-        var prefix = ctx + "system/project";
+        var prefix = ctx + "system/slagyard";
 
         $(function() {
             var options = {
-                url: prefix + "/stalist",
-                exportUrl: prefix + "/staexport",
-                modalName: "项目管理",
+                url: prefix + "/slagYardStatisticsList",
+                exportUrl: prefix + "/slagYardStatisticsListexport",
+                modalName: "渣场统计",
                 columns: [{
                     checkbox: true
                 },
                 {
                     field: 'name',
-                    title: '项目名称'
-                },
-                {
-                    field: 'pullTotalMoney',
-                    title: '应收'
-                },
-                {
-                    field: 'pushCarTotalMoney',
-                    title: '车应付'
-                },
-                {
-                    field: 'pushSlaTotalMoney',
-                    title: '渣应付'
-                },
-                {
-                    field: 'getEndMoney',
-                    title: '已付'
-                },
-                {
-                    field: 'pullEndMoney',
-                    title: '已收'
-                },
-                {
-                    field: 'pullMoney',
-                    title: '利润'
-                },
-                {
-                    field: 'pushTotal',
-                    title: '票(发)'
-                },
-                {
-                    field: 'carTotal',
-                    title: '车票(收)'
+                    title: '渣场名称'
                 },
                 {
                     field: 'slaTotal',
-                    title: '渣票(收)'
+                    title: '票（数）'
+                },
+                {
+                    field: 'pushSlaTotalMoney',
+                    title: '应收'
+                },
+                {
+                    field: 'pullEndMoney',
+                    title: '已付'
                 },
                 {
                     title: '详情',
                     align: 'center',
                     formatter: function(value, row, index) {
                         var actions = [];
-                        actions.push('<a class="btn btn-danger btn-xs" href="javascript:void(0)" onclick="open2(\'' + row.projectId +'\',\''+row.name+ '\')"><i class="fa fa-edit"></i>渣场</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs" href="javascript:void(0)" onclick="open2(\'' + row.slagyardId +'\',\''+row.name+ '\')"><i class="fa fa-edit"></i>项目明细</a> ');
                         return actions.join('');
                     }
                 }]
@@ -117,10 +90,8 @@
             $.table.init(options);
         });
 
-
-
-        function open2(projectId,title){
-            $.modal.openTab(title, prefix + "/staSlaProject?projectId="+projectId);
+        function open2(slagyardId,title){
+            $.modal.openTab(title, prefix + "/slagYardProjectStatistics?slagyardId="+slagyardId);
         }
         function allExport() {
             window.location = prefix + "/allExport";

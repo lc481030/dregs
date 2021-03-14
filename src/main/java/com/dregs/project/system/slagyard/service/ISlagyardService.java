@@ -1,6 +1,9 @@
 package com.dregs.project.system.slagyard.service;
 
 import com.dregs.project.system.car.domain.Car;
+import com.dregs.project.system.project.domain.SlagYardStatistics;
+import com.dregs.project.system.project.domain.SlagYardStatisticsProject;
+import com.dregs.project.system.project.domain.StaProject;
 import com.dregs.project.system.slagyard.domain.Slagyard;
 
 import java.util.List;
@@ -11,7 +14,7 @@ import java.util.List;
  * @author lc
  * @date 2020-11-06
  */
-public interface ISlagyardService 
+public interface ISlagyardService
 {
     /**
      * 查询渣场
@@ -62,4 +65,8 @@ public interface ISlagyardService
     public int deleteSlagyardById(Long id);
 
     List<Slagyard> selectSlagyardByPayList();
+
+    List<SlagYardStatistics> slagYardStatistics(SlagYardStatistics slagYardStatistics);
+
+    List<SlagYardStatisticsProject> slagYardStatisticsProject(SlagYardStatisticsProject slagYardStatisticsProject);
 }
