@@ -179,14 +179,15 @@ public class TProjectServiceImpl implements ITProjectService
             }
             //查询项目已付金额
             TProjectPay tProjectPay = new TProjectPay();
-            tProjectPay.setRelationId(project.getId());
+            tProjectPay.setRelationId(tProject.getId());
             tProjectPay.setType("1");
             /*已收*/
             String getEndMoney = projectPayMapper.getMoneyByObjectId(tProjectPay);
 
             /*已付*/
             tProjectPay.setRelationId(null);
-            tProjectPay.setPayObjId(project.getId());
+            tProjectPay.setPayObjId(tProject.getId());
+            tProjectPay.setType("2");
             String pullEndMoney = projectPayMapper.getMoneyByObjectId(tProjectPay);
 
             StaProject _staProject = new StaProject();
@@ -199,6 +200,8 @@ public class TProjectServiceImpl implements ITProjectService
             _staProject.setCarTotal(carTotalNum.toString());
             _staProject.setSlaTotal(staTotalNum.toString());
             _staProject.setProjectId(tProject.getId().toString());
+            _staProject.setGetEndMoney(getEndMoney);
+            _staProject.setPullEndMoney(pullEndMoney);
             _list.add(_staProject);
         });
         return _list;
